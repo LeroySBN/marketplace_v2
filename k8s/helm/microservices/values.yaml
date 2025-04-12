@@ -1,0 +1,48 @@
+customerService:
+  name: customer-service
+  replicas: 2
+  image:
+    repository: customer-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 5000
+
+orderService:
+  name: order-service
+  replicas: 2
+  image:
+    repository: order-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 5001
+
+notificationService:
+  name: notification-service
+  replicas: 1
+  image:
+    repository: notification-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 5002
+
+postgresql:
+  enabled: true
+  postgresqlUsername: postgres
+  postgresqlPassword: postgres
+  postgresqlDatabase: microservices
+
+rabbitmq:
+  enabled: true
+  auth:
+    username: user
+    password: password
+
+kong:
+  enabled: true
+  ingressController:
+    enabled: true
+  proxy:
+    type: LoadBalancer
