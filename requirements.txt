@@ -12,3 +12,12 @@ requests==2.31.0
 africastalking==1.2.5
 python-dotenv==1.0.0
 flask-cors==4.0.0
+redis==4.6.0
+celery==5.3.1
+sendgrid==6.10.0
+sqlalchemy==2.0.19
+alembic==1.11.1
+fastapi==0.100.0
+uvicorn==0.23.1
+aioredis==2.0.1
+asyncpg==0.28.0
