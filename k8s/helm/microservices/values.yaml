@@ -20,7 +20,7 @@ orderService:
 
 notificationService:
   name: notification-service
-  replicas: 1
+  replicas: 2
   image:
     repository: notification-service
     tag: latest
@@ -28,17 +28,57 @@ notificationService:
     type: ClusterIP
     port: 5002
 
+inventoryService:
+  name: inventory-service
+  replicas: 2
+  image:
+    repository: inventory-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 5003
+
+vendorService:
+  name: vendor-service
+  replicas: 2
+  image:
+    repository: vendor-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 5004
+
+cartService:
+  name: cart-service
+  replicas: 2
+  image:
+    repository: cart-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 5005
+
 postgresql:
   enabled: true
   postgresqlUsername: postgres
   postgresqlPassword: postgres
   postgresqlDatabase: microservices
 
+redis:
+  enabled: true
+  architecture: replication
+  auth:
+    enabled: true
+    password: redis-password
+
 rabbitmq:
   enabled: true
   auth:
     username: user
     password: password
+  clustering:
+    enabled: true
+    replicaCount: 3
 
 kong:
   enabled: true
@@ -46,3 +86,16 @@ kong:
     enabled: true
   proxy:
     type: LoadBalancer
+
+monitoring:
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+
+elasticSearch:
+  enabled: true
+  replicas: 3
+
+kibana:
+  enabled: true
