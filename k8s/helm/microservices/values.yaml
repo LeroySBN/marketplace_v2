@@ -1,18 +1,18 @@
-customerService:
-  name: customer-service
+userService:
+  name: user-service
   replicas: 2
   image:
-    repository: customer-service
+    repository: user-service
     tag: latest
   service:
     type: ClusterIP
     port: 5000
 
-orderService:
-  name: order-service
+authService:
+  name: auth-service
   replicas: 2
   image:
-    repository: order-service
+    repository: auth-service
     tag: latest
   service:
     type: ClusterIP
@@ -38,16 +38,6 @@ inventoryService:
     type: ClusterIP
     port: 5003
 
-vendorService:
-  name: vendor-service
-  replicas: 2
-  image:
-    repository: vendor-service
-    tag: latest
-  service:
-    type: ClusterIP
-    port: 5004
-
 cartService:
   name: cart-service
   replicas: 2
@@ -56,7 +46,7 @@ cartService:
     tag: latest
   service:
     type: ClusterIP
-    port: 5005
+    port: 5004
 
 jenkins:
   enabled: true
