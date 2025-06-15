@@ -16,11 +16,11 @@ def publish_order(order_data):
         pika.ConnectionParameters(host=os.getenv('RABBITMQ_HOST', 'localhost'))
     )
     channel = connection.channel()
-    channel.queue_declare(queue='order_notifications')
+    channel.queue_declare(queue='cart_notifications')
     
     channel.basic_publish(
         exchange='',
-        routing_key='order_notifications',
+        routing_key='cart_notifications',
         body=json.dumps(order_data)
     )
     connection.close()

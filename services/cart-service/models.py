@@ -5,8 +5,10 @@ from datetime import datetime
 class Cart(Base):
     __tablename__ = 'carts'
     id = Column(Integer, primary_key=True)
-    customer_id = Column(Integer)
-    status = Column(String(20), default='ACTIVE')  # ACTIVE, CHECKED_OUT, ABANDONED
+    customer_id = Column(String(50))
+    status = Column(String(20), default='PENDING')  # PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+    total_amount = Column(Float)
+    shipping_address = Column(JSON)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
