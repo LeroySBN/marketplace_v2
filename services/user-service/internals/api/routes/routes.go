@@ -27,13 +27,10 @@ func SetupRoutes(app *fiber.App) {
 	// API group
 	api := app.Group("/api/v1")
 
-	api.Post("/users", handlers.CreateCustomer) // user registration
-	api.Post("/users/login", handlers.Login)    // user authentication
-	api.Post("/users/cart", handlers.CreateCart)
-	api.Get("/users/cart", handlers.GetCart)
-	api.Put("/users/cart/:id", handlers.UpdateCart)
-	api.Delete("/users/cart/:id", handlers.DeleteCart)
-	api.Post("/users/orders/:id", handlers.CreateOrder)
+	api.Post("/users", handlers.CreateUser)  // user registration
+	api.Post("/users/login", handlers.Login) // user authentication
+	api.Get("/users/me", auth.AuthMiddleware(handlers.GetUser))
+	api.Post("/users/logout", auth.AuthMiddleware(handlers.Logout))
 
 	// 404 Handler
 	app.Use(notFoundHandler)

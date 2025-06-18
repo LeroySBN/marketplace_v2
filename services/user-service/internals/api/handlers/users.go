@@ -13,7 +13,7 @@ import (
 )
 
 // CreateCustomer creates a new customer
-func CreateCustomer(c *fiber.Ctx) error {
+func CreateUser(c *fiber.Ctx) error {
 	customer := new(models.Customer)
 
 	// Error check fields
@@ -147,7 +147,7 @@ func Login(c *fiber.Ctx) error {
 }
 
 // GetCustomer retrieves information of currently authorized user
-func GetCustomer(c *fiber.Ctx) error {
+func GetUser(c *fiber.Ctx) error {
 	// Retrieve user information from the context
 	user := c.Locals("user").(*models.Customer)
 
