@@ -35,6 +35,9 @@ kotlin {
             implementation(compose.ui)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.foundation)
+            implementation(libs.material3.adaptive)
         }
         androidMain.dependencies {
         }
