@@ -1,6 +1,6 @@
-# K8s Flask Microservices
+# A marketplace Microservices
 
-A modern microservices application built with Flask, Docker, Kubernetes, Kong API Gateway, and RabbitMQ.
+A modern microservices application built with a K8s cluster.
 
 ## Features
 - Customer and Order management via GraphQL API
