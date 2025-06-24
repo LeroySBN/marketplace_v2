@@ -1,0 +1,41 @@
+{{- if .Values.inventoryService }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.inventoryService.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.inventoryService.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.inventoryService.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.inventoryService.name }}
+    spec:
+      containers:
+        - name: {{ .Values.inventoryService.name }}
+          image: "{{ .Values.inventoryService.image.repository }}:{{ .Values.inventoryService.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.inventoryService.service.port }}
+          env:
+            - name: DATABASE_URL
+              value: "postgres://{{ .Values.postgresql.postgresqlUsername }}:{{ .Values.postgresql.postgresqlPassword }}@postgresql:5432/{{ .Values.postgresql.postgresqlDatabase }}"
+            - name: REDIS_URL
+              value: "redis://:{{ .Values.redis.auth.password }}@redis:6379"
+            - name: PORT
+              value: "{{ .Values.inventoryService.service.port }}"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.inventoryService.service.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: {{ .Values.inventoryService.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+{{- end }}

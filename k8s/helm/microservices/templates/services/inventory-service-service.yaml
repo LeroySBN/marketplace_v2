@@ -1,0 +1,16 @@
+{{- if .Values.inventoryService }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.inventoryService.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: {{ .Values.inventoryService.name }}
+  ports:
+    - name: http
+      port: {{ .Values.inventoryService.service.port }}
+      targetPort: {{ .Values.inventoryService.service.port }}
+      protocol: TCP
+  type: {{ .Values.inventoryService.service.type }}
+{{- end }}

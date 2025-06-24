@@ -1,33 +1,3 @@
-userService:
-  name: user-service
-  replicas: 2
-  image:
-    repository: user-service
-    tag: latest
-  service:
-    type: ClusterIP
-    port: 5000
-
-authService:
-  name: auth-service
-  replicas: 2
-  image:
-    repository: auth-service
-    tag: latest
-  service:
-    type: ClusterIP
-    port: 5001
-
-notificationService:
-  name: notification-service
-  replicas: 2
-  image:
-    repository: notification-service
-    tag: latest
-  service:
-    type: ClusterIP
-    port: 5002
-
 inventoryService:
   name: inventory-service
   replicas: 2
@@ -36,17 +6,47 @@ inventoryService:
     tag: latest
   service:
     type: ClusterIP
-    port: 5003
+    port: 5000
 
-cartService:
-  name: cart-service
-  replicas: 2
-  image:
-    repository: cart-service
-    tag: latest
-  service:
-    type: ClusterIP
-    port: 5004
+#userService:
+#  name: user-service
+#  replicas: 2
+#  image:
+#    repository: user-service
+#    tag: latest
+#  service:
+#    type: ClusterIP
+#    port: 5001
+#
+#authService:
+#  name: auth-service
+#  replicas: 2
+#  image:
+#    repository: auth-service
+#    tag: latest
+#  service:
+#    type: ClusterIP
+#    port: 5002
+#
+#notificationService:
+#  name: notification-service
+#  replicas: 2
+#  image:
+#    repository: notification-service
+#    tag: latest
+#  service:
+#    type: ClusterIP
+#    port: 5003
+#
+#cartService:
+#  name: cart-service
+#  replicas: 2
+#  image:
+#    repository: cart-service
+#    tag: latest
+#  service:
+#    type: ClusterIP
+#    port: 5004
 
 jenkins:
   enabled: true
@@ -143,3 +143,6 @@ sonarqube:
     size: 10Gi
   postgresql:
     enabled: true
+
+networkPolicies:
+  enabled: true
