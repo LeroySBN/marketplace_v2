@@ -2,6 +2,7 @@ package databases
 
 import (
 	"fmt"
+	"inventory-service/internals/databases/models"
 	"log"
 	"os"
 
@@ -12,14 +13,13 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-type Dbinstance struct {
+var (
 	Db *gorm.DB
-}
-
-var DB Dbinstance
+)
 
 // InitializeDB initializes the database connection and performs migrations
-func ConnectDB() {
+
+func Connect() {
 	var err error
 	var db *gorm.DB
 
@@ -44,7 +44,7 @@ func ConnectDB() {
 		// sqlite database for testing CRUD operations
 		log.Println("Connecting to SQLite database for testing CRUD operations")
 		// Attempt to connect to SQLite for testing CRUD operations
-		db, err = gorm.Open(sqlite.Open("storedb"), &gorm.Config{})
+		db, err = gorm.Open(sqlite.Open("storeDB"), &gorm.Config{})
 		if err != nil {
 			log.Fatalf("Failed to connect to SQLite database: %v", err)
 		}
@@ -55,17 +55,18 @@ func ConnectDB() {
 
 	// Perform auto-migration
 	log.Println("Performing auto-migration")
-	db.AutoMigrate(&models.Product{}, &models.Customer{}, &models.Order{})
+	err = db.AutoMigrate(&models.Product{})
+	if err != nil {
+		return
+	}
 
 	log.Println("Database migration successful")
 
-	DB = Dbinstance{
-		Db: db,
-	}
+	Db = db
 }
 
 func CheckDBConnection() bool {
-	sqlDB, _ := DB.Db.DB()
+	sqlDB, _ := Db.DB()
 
 	err := sqlDB.Ping()
 	if err != nil {

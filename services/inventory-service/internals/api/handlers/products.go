@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
-	"product-service/internals/databases/models"
+	"errors"
+	"inventory-service/internals/databases"
+	"inventory-service/internals/databases/models"
 	"strconv"
 	"strings"
 	"time"
@@ -16,7 +18,8 @@ func CreateProduct(c *fiber.Ctx) error {
 
 	// Error check fields
 	if err := c.BodyParser(product); err != nil {
-		if _, ok := err.(*json.UnmarshalTypeError); ok {
+		var unmarshalTypeError *json.UnmarshalTypeError
+		if errors.As(err, &unmarshalTypeError) {
 			// Check if the error is related to the "stock" field
 			if strings.Contains(err.Error(), "stock") {
 				return c.Status(400).JSON(fiber.Map{"error": "Missing stock of type integer"})
@@ -29,7 +32,8 @@ func CreateProduct(c *fiber.Ctx) error {
 				return c.Status(400).JSON(fiber.Map{"error": "Missing name of type string"})
 			}
 		}
-		if _, ok := err.(*json.SyntaxError); ok {
+		var syntaxError *json.SyntaxError
+		if errors.As(err, &syntaxError) {
 			if strings.Contains(string(c.Body()), "stock") {
 				return c.Status(400).JSON(fiber.Map{"error": "Invalid stock number format"})
 			}
@@ -52,18 +56,21 @@ func CreateProduct(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Stock must be a positive integer"})
 	}
 
-	// Check if product already exists
+	// Check if the product already exists
 	var existingProduct models.Product
-	if err := database.DB.Db.Where("name = ?", product.Name).First(&existingProduct).Error; err == nil {
+	if err := databases.Db.Where("name = ?", product.Name).First(&existingProduct).Error; err == nil {
 		return c.Status(400).JSON(fiber.Map{"error": "Product already exists"})
 	}
 
 	// Create the product in a goroutine
 	go func() {
-		if err := database.DB.Db.Create(&product).Error; err != nil {
+		if err := databases.Db.Create(&product).Error; err != nil {
 			// Handle error in goroutine
 			// fmt.Println("Error creating product:", err)
-			c.Status(500).JSON(fiber.Map{"error": "Internal server error"})
+			err := c.Status(500).JSON(fiber.Map{"error": "Internal server error"})
+			if err != nil {
+				return
+			}
 			return
 		}
 	}()
@@ -88,11 +95,11 @@ func GetProducts(c *fiber.Ctx) error {
 	offset := (pageNum - 1) * 20
 	limit := 20
 
-	// Fetch products from database in a goroutine
+	// Fetch products from a database in a goroutine
 	var products []models.Product
 	done := make(chan bool)
 	go func() {
-		if err := database.DB.Db.Offset(offset).Limit(limit).Find(&products).Error; err != nil {
+		if err := databases.Db.Offset(offset).Limit(limit).Find(&products).Error; err != nil {
 			done <- false
 		} else {
 			done <- true
@@ -118,7 +125,7 @@ func GetProduct(c *fiber.Ctx) error {
 
 	done := make(chan bool)
 	go func() {
-		if err := database.DB.Db.First(&product, id).Error; err != nil {
+		if err := databases.Db.First(&product, id).Error; err != nil {
 			done <- false
 		} else {
 			done <- true
@@ -144,14 +151,15 @@ func UpdateProduct(c *fiber.Ctx) error {
 	done := make(chan bool)
 
 	go func() {
-		database.DB.Db.First(&product, id)
+		databases.Db.First(&product, id)
 		done <- true
 	}()
 
 	select {
 	case <-done:
 		if err := c.BodyParser(product); err != nil {
-			if _, ok := err.(*json.UnmarshalTypeError); ok {
+			var unmarshalTypeError *json.UnmarshalTypeError
+			if errors.As(err, &unmarshalTypeError) {
 				// Check if the error is related to the "stock" field
 				if strings.Contains(err.Error(), "stock") {
 					return c.Status(400).JSON(fiber.Map{"error": "Missing stock of type integer"})
@@ -164,7 +172,8 @@ func UpdateProduct(c *fiber.Ctx) error {
 					return c.Status(400).JSON(fiber.Map{"error": "Missing name of type string"})
 				}
 			}
-			if _, ok := err.(*json.SyntaxError); ok {
+			var syntaxError *json.SyntaxError
+			if errors.As(err, &syntaxError) {
 				if strings.Contains(string(c.Body()), "stock") {
 					return c.Status(400).JSON(fiber.Map{"error": "Invalid stock number format"})
 				}
@@ -187,7 +196,7 @@ func UpdateProduct(c *fiber.Ctx) error {
 			return c.Status(400).JSON(fiber.Map{"error": "Price must be a positive integer"})
 		}
 
-		database.DB.Db.Save(&product)
+		databases.Db.Save(&product)
 		return c.JSON(product)
 	case <-time.After(5 * time.Second):
 		return c.Status(500).JSON(fiber.Map{"error": "Timeout"})
@@ -201,7 +210,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 
 	done := make(chan bool)
 	go func() {
-		if err := database.DB.Db.First(&product, id).Error; err != nil {
+		if err := databases.Db.First(&product, id).Error; err != nil {
 			done <- false
 		} else {
 			done <- true
@@ -211,7 +220,7 @@ func DeleteProduct(c *fiber.Ctx) error {
 	select {
 	case success := <-done:
 		if success {
-			database.DB.Db.Delete(&product)
+			databases.Db.Delete(&product)
 			return c.Status(204).JSON(fiber.Map{"message": "Product deleted successfully"})
 		} else {
 			return c.Status(404).JSON(fiber.Map{"error": "Product not found"})

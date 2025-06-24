@@ -1,17 +1,22 @@
 package routes
 
 import (
+	"github.com/gofiber/fiber/v2"
+	"inventory-service/internals/api/handlers"
+	"inventory-service/internals/databases"
 	"time"
 
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/leroysb/go_kubernetes/internal/api/handlers"
-	"github.com/leroysb/go_kubernetes/internal/database"
 )
 
 func SetupRoutes(app *fiber.App) {
-	// Middleware
+	// Health checks
+	app.Get("/health", HealthCheck)
+	app.Get("/ready", ReadinessCheck)
+
+	// Middleware injection
 	app.Use(limiter.New(limiter.Config{
 		Max:        10,
 		Expiration: 1 * time.Minute,
@@ -26,8 +31,7 @@ func SetupRoutes(app *fiber.App) {
 	app.Use(logger.New())
 
 	// API group
-	//api := app.Group("/api/v1")
-
+	api := app.Group("/api/v1")
 	api.Get("/products", handlers.GetProducts)
 	api.Post("/products", handlers.CreateProduct)
 	api.Get("/products/:id", handlers.GetProduct)
@@ -38,8 +42,12 @@ func SetupRoutes(app *fiber.App) {
 	app.Use(notFoundHandler)
 }
 
-func StatusHandler(c *fiber.Ctx) error {
-	if database.CheckDBConnection() {
+func HealthCheck(c *fiber.Ctx) error {
+	return c.Status(200).JSON(fiber.Map{"status": "healthy"})
+}
+
+func ReadinessCheck(c *fiber.Ctx) error {
+	if databases.CheckDBConnection() {
 		return c.Status(200).JSON(fiber.Map{"Postgres": "OK"})
 	}
 	return c.Status(500).JSON(fiber.Map{"Postgres": "Error"})
