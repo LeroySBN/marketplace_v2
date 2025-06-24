@@ -1,6 +1,6 @@
-# A marketplace Microservices
+# Markets
 
-A modern microservices application built with a K8s cluster.
+An event-driven microservices backend application using Go to serve a GraphQL API, and RabbitMQ for inter-service communication, with a Kotlin Multiplatform mobile frontend.
 
 ## Features
 - Customer and Order management via GraphQL API
@@ -23,38 +23,20 @@ A modern microservices application built with a K8s cluster.
 - Comprehensive monitoring and logging
 
 ## Services
-- Customer Service (Port 5000)
-- Order Service (Port 5001)
-- Notification Service (Port 5002)
-- Inventory Service (Port 5003)
-- Vendor Service (Port 5004)
-- Cart Service (Port 5005)
+- Inventory Service (Port 5000)
+- User Service (Port 5001)
+- Auth Service (Port 5002)
+- Notification Service (Port 5003)
+- Cart Service (Port 5004)
 
 ## Prerequisites
-- Docker & Docker Compose
-- Kubernetes cluster
-- Helm
-- Jenkins
-- Python 3.9+
-- PostgreSQL
-- RabbitMQ
-- Kong API Gateway
-
-## Quick Start
-1. Clone the repository
-2. Create a `.env` file with required environment variables
-3. Deploy using Jenkins pipeline or manually:
-   ```bash
-   # Manual deployment
-   helm upgrade --install ecommerce ./k8s/helm/microservices
-   ```
-
-## Development
-```bash
-make dev     # Start development environment
-make test    # Run tests
-make deploy  # Deploy to Kubernetes
-```
+- Ubuntu server 22.04
+- [Kubernetes](https://kubernetes.io/docs/home/) cluster (kubectl, kubeadm, kubelet)
+- containerd for CRI
+- [Calico](https://docs.tigera.io/calico/latest/about/) CNI for networking
+- [Helm](https://helm.sh/)
+- [Jenkins](https://www.jenkins.io/)
+- Golang v1.21
 
 ## CI/CD Pipeline
 The project uses Jenkins for continuous integration and deployment:
@@ -77,6 +59,10 @@ See [Jenkins Setup Guide](docs/jenkins-setup.md) for detailed configuration.
 - Grafana for visualization
 - ELK Stack for log aggregation
 - Jenkins build monitoring
+
+## Getting started
+1. Clone the repository
+2. 
 
 ## License
 MIT
