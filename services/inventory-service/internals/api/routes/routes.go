@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"inventory-service/internals/api/handlers"
+	"inventory-service/internals/api/graphql"
 	"inventory-service/internals/databases"
 	"time"
 
@@ -32,11 +32,10 @@ func SetupRoutes(app *fiber.App) {
 
 	// API group
 	api := app.Group("/api/v1")
-	api.Get("/products", handlers.GetProducts)
-	api.Post("/products", handlers.CreateProduct)
-	api.Get("/products/:id", handlers.GetProduct)
-	api.Put("/products/:id", handlers.UpdateProduct)
-	api.Delete("/products/:id", handlers.DeleteProduct)
+
+	// GraphQL
+	graphqlHandler := graphql.NewGraphQLHandler()
+	api.All("/graphql", graphqlHandler)
 
 	// 404 Handler
 	app.Use(notFoundHandler)
