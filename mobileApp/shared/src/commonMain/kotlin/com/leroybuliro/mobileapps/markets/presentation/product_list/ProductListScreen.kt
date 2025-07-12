@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.DeliveryDining
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -46,7 +46,7 @@ import markets.shared.generated.resources.account_tab
 import markets.shared.generated.resources.app_name
 import markets.shared.generated.resources.cart_tab
 import markets.shared.generated.resources.home_tab
-import markets.shared.generated.resources.search_tab
+import markets.shared.generated.resources.orders_tab
 import markets.shared.generated.resources.wishlist_tab
 import org.jetbrains.compose.resources.stringResource
 
@@ -64,26 +64,29 @@ fun ProductListScreen(
 
     val items = listOf(
         stringResource(Res.string.home_tab),
-        stringResource(Res.string.search_tab),
-        stringResource(Res.string.account_tab),
+//        stringResource(Res.string.search_tab),
         stringResource(Res.string.wishlist_tab),
-        stringResource(Res.string.cart_tab)
+        stringResource(Res.string.account_tab),
+        stringResource(Res.string.cart_tab),
+        stringResource(Res.string.orders_tab),
     )
 
     val selectedIcons = listOf(
         Icons.Filled.Home,
-        Icons.Filled.Search,
-        Icons.Filled.AccountCircle,
+//        Icons.Filled.Search,
         Icons.Filled.Star,
-        Icons.Outlined.ShoppingCart
+        Icons.Filled.AccountCircle,
+        Icons.Outlined.ShoppingCart,
+        Icons.Outlined.DeliveryDining,
 
     )
     val unselectedIcons = listOf(
         Icons.Outlined.Home,
-        Icons.Outlined.Search,
-        Icons.Outlined.AccountCircle,
+//        Icons.Outlined.Search,
         Icons.Outlined.Star,
-        Icons.Outlined.ShoppingCart
+        Icons.Outlined.AccountCircle,
+        Icons.Outlined.ShoppingCart,
+        Icons.Outlined.DeliveryDining,
     )
 
     MaterialTheme( colorScheme = if (isDarkTheme) DarkColorPalette else LightColorPalette ) {
@@ -103,11 +106,12 @@ fun ProductListScreen(
                             )
                         },
                         navigationIcon = {
+                            // TODO: Implement screen navigation and animations
                             FilledIconButton(
                                 onClick = { /* doSomething() */ }
                             ) {
                                 Icon(
-                                    imageVector = Icons.Filled.Menu,
+                                    imageVector = Icons.Filled.ChevronLeft,
                                     contentDescription = "Localized description"
                                 )
                             }
