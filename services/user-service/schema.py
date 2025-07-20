@@ -1,8 +1,11 @@
+"""schema.py
+This module defines the graphQL schema"""
 import graphene
 from graphene_sqlalchemy import SQLAlchemyObjectType
 from models import Customer as CustomerModel
 from database import db_session
 from datetime import datetime
+
 
 class Customer(SQLAlchemyObjectType):
     class Meta:

@@ -1,9 +1,11 @@
+"""app.py
+Defines the entry point to the user service"""
 import os
 from flask import Flask, request, jsonify
 from flask_graphql import GraphQLView
 import graphene
+from model import User
 from database import db_session, init_db
-from models import Customer
 from schema import schema
 from auth import requires_auth
 
@@ -12,6 +14,8 @@ app.debug = True
 
 @app.route('/health')
 def health_check():
+    """Returns the health check status of the user service
+    """
     return jsonify({"status": "healthy"})
 
 app.add_url_rule(

@@ -9,6 +9,7 @@ AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
 API_AUDIENCE = os.getenv('API_AUDIENCE')
 ALGORITHMS = ["RS256"]
 
+
 def get_token_auth_header():
     auth = request.headers.get("Authorization", None)
     if not auth:
@@ -29,6 +30,7 @@ def get_token_auth_header():
 
     token = parts[1]
     return token
+
 
 def requires_auth(f):
     @wraps(f)
@@ -70,6 +72,7 @@ def requires_auth(f):
         raise AuthError({"code": "invalid_header",
                         "description": "Unable to find appropriate key"}, 401)
     return decorated
+
 
 class AuthError(Exception):
     def __init__(self, error, status_code):
