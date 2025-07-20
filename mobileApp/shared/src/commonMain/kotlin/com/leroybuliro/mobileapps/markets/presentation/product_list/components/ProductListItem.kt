@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,7 +26,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.leroybuliro.mobileapps.markets.domain.Product
+import markets.shared.generated.resources.Res
+import markets.shared.generated.resources.add_cart
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProductListItem(
@@ -36,67 +38,63 @@ fun ProductListItem(
     product: Product
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.surface,
-        modifier = modifier.clickable { onClick() }
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        color = MaterialTheme.colorScheme.background,
     ) {
-        Column(
-            modifier = Modifier
-                .padding(
-                    top = 16.dp,
-                    bottom = 24.dp,
-                    start = 0.dp,
-                    end = 0.dp
-                ),
-        ) {
-            Box(
-                modifier = Modifier.padding(0.dp)
+        Column {
+            Box (
+                modifier = modifier
+                    .fillMaxWidth(),
             ) {
                 Image(
-                    painter = painterResource(resource = product.image),
+                    painter = painterResource(resource = product.image[0]),
                     contentDescription = product.name,
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.FillWidth,
+                    modifier = modifier.fillMaxWidth()
                 )
             }
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .padding(
                         top = 8.dp,
                         start = 8.dp,
                         bottom = 0.dp
                     ),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
                     text = product.name,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray,
-                    maxLines = 1
+                    maxLines = 1,
                 )
-                Spacer(modifier = Modifier.width(16.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = modifier
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        text = product.price.toString(),
+                        text = "Ksh " + product.price.toString(),
                         style = MaterialTheme.typography.bodyLarge,
                     )
                     IconButton(
                         onClick = onClick,
                         colors = IconButtonDefaults.filledIconButtonColors(Color.Red),
-                        modifier = Modifier
+                        modifier = modifier
                             .width(40.dp)
                             .height(22.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.AddShoppingCart,
-                            contentDescription = "Add to cart",
-                            tint = Color.White,
-                            modifier = Modifier
+                            contentDescription = stringResource(Res.string.add_cart),
+                            tint = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = modifier
                                 .padding(top = 2.dp, bottom = 2.dp)
                         )
                     }

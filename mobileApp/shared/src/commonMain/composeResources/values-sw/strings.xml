@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">Markets by Buliro</string>
+    <string name="app_title">Markets</string>
+    <string name="app_version">1.0</string>
+    <string name="shop_tab">Shop</string>
+    <string name="wishlist_tab">Wishlist</string>
+    <string name="cart">Cart</string>
+    <string name="orders">Orders</string>
+</resources>

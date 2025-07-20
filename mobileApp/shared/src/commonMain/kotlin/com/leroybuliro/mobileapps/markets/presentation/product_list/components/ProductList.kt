@@ -16,15 +16,16 @@ import com.leroybuliro.mobileapps.markets.domain.Product
 
 @Composable
 fun ProductList(
-    scrollState: LazyGridState = rememberLazyGridState(),
     modifier: Modifier = Modifier,
     onProductClick: () -> Unit,
     product: List<Product>,
+    scrollState: LazyGridState = rememberLazyGridState(),
 ) {
     LazyVerticalGrid(
-        modifier = modifier,
         columns = GridCells.Fixed(count = 2),
         state = scrollState,
+        modifier = modifier.padding(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ){
         items(
@@ -34,10 +35,8 @@ fun ProductList(
                 product ->
             ProductListItem(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal =16.dp)
                     .widthIn(max = 700.dp),
-                onClick = { onProductClick() },
+                onClick = onProductClick,
                 product = product,
             )
         }

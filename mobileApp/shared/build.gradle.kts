@@ -12,7 +12,7 @@ kotlin {
         compilations.all {
             compileTaskProvider.configure {
                 compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_1_8)
+                    jvmTarget.set(JvmTarget.JVM_17)
                 }
             }
         }
@@ -31,15 +31,20 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.components.resources)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.foundation)
-            implementation(libs.material3.adaptive)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material)
+            implementation(libs.material.icons.core)
+            implementation(libs.material.icons.extended)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.material3.adaptive)
         }
         androidMain.dependencies {
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.ui.tooling)
         }
         iosMain.dependencies {
         }
@@ -47,16 +52,22 @@ kotlin {
             implementation(libs.kotlin.test)
         }
     }
+
+    jvmToolchain(17)
 }
 
 android {
     namespace = "com.leroybuliro.mobileapps.markets"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         minSdk = 26
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+compose.resources {
+    generateResClass = always
 }
