@@ -1,6 +1,7 @@
 package com.leroybuliro.mobileapps.markets.presentation.product_detail.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -27,14 +30,17 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProductDetailItem(
+    scrollState: LazyListState = rememberLazyListState(),
     modifier: Modifier = Modifier,
     product: Product
 ) {
     Surface (
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().padding(bottom = 100.dp),
         color = MaterialTheme.colorScheme.background,
     ) {
-        LazyColumn {
+        LazyColumn(
+            state = scrollState,
+        ) {
             item {
                 Box (
                     modifier = modifier.padding(0.dp)

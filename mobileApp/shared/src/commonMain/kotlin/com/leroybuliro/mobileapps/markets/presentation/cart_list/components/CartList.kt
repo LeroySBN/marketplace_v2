@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.leroybuliro.mobileapps.markets.domain.Cart
 
@@ -21,7 +22,7 @@ fun CartList(
 ) {
     LazyColumn(
         state = scrollState,
-        modifier = modifier.fillMaxWidth().padding(8.dp),
+        modifier = modifier.padding(start = 8.dp, end = 8.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ){
         items(

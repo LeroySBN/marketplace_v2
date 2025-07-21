@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -35,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -65,6 +63,8 @@ import com.leroybuliro.mobileapps.markets.presentation.product_list.ProductListS
 import com.leroybuliro.mobileapps.markets.presentation.settings_list.SettingsListScreen
 import com.leroybuliro.mobileapps.markets.presentation.theme.DarkColorPalette
 import com.leroybuliro.mobileapps.markets.presentation.theme.LightColorPalette
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import markets.shared.generated.resources.Res
 import markets.shared.generated.resources.account
 import markets.shared.generated.resources.cart_tab
@@ -78,8 +78,6 @@ import markets.shared.generated.resources.wallet_tab
 import markets.shared.generated.resources.wishlist_tab
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 
 private val products = (1..40).map {
     Product(
@@ -302,7 +300,11 @@ fun App() {
                     // TODO: Implement new Toolbar Component
                     if (currentScreen != Screen.SettingsList) {
                         AnimatedVisibility (
-                            visible = isNavBarVisible,
+                            visible = when (currentScreen) {
+                                Screen.ProductList -> true
+                                Screen.ProductDetail -> false
+                                else -> isNavBarVisible
+                            },
                             enter = slideInVertically(
                                 animationSpec = tween(250),
                                 initialOffsetY = { it }),
@@ -345,8 +347,6 @@ fun App() {
                     }
                 },
                 snackbarHost = {},
-//                floatingActionButton = {},
-//                floatingActionButtonPosition = FabPosition.End,
                 contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
             ) { innerPadding ->
                 Column (
@@ -367,7 +367,7 @@ fun App() {
                         }
                         Screen.ProductDetail -> {
                             ProductDetailScreen (
-//                                state = lazyListState,
+                                state = lazyListState,
                                 isDarkTheme = isDarkMode,
                                 product = products[0],
                             )
