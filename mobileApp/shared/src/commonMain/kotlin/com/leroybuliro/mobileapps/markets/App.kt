@@ -160,6 +160,7 @@ fun App() {
     var currentScreen by remember { mutableStateOf(Screen.ProductList) }
     var isDarkMode by remember { mutableStateOf(false) }
     var isNavBarCompact by remember { mutableStateOf(false) }
+    var isNavBarVisible by remember { mutableStateOf(true) }
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -171,7 +172,6 @@ fun App() {
 //            !lazyListState.isScrollInProgress
 //        }
 //    }
-    var isNavBarVisible by remember { mutableStateOf(true) }
 
     val navBarScreens = listOf(
         Screen.ProductList,
@@ -298,50 +298,48 @@ fun App() {
                 },
                 bottomBar = {
                     // TODO: Implement new Toolbar Component
-                    if (currentScreen != Screen.SettingsList) {
-                        AnimatedVisibility (
-                            visible = when (currentScreen) {
-                                Screen.ProductList -> true
-                                Screen.ProductDetail -> false
-                                else -> isNavBarVisible
-                            },
-                            enter = slideInVertically(
-                                animationSpec = tween(250),
-                                initialOffsetY = { it }),
-                            exit = slideOutVertically(
-                                animationSpec = tween(250),
-                                targetOffsetY = { it }),
+                    AnimatedVisibility (
+                        visible = when (currentScreen) {
+                            Screen.ProductList -> true
+                            Screen.ProductDetail, Screen.SettingsList -> false
+                            else -> isNavBarVisible
+                        },
+                        enter = slideInVertically(
+                            animationSpec = tween(500),
+                            initialOffsetY = { it }),
+                        exit = slideOutVertically(
+                            animationSpec = tween(250),
+                            targetOffsetY = { it }),
+                    ) {
+                        NavigationBar (
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            tonalElevation = 16.dp,
+                            windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
-                            NavigationBar (
-                                containerColor = MaterialTheme.colorScheme.background,
-                                contentColor = MaterialTheme.colorScheme.onBackground,
-                                tonalElevation = 16.dp,
-                                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
-                            ) {
-                                navBarScreens.forEach { screenEnum ->
-                                    NavigationBarItem (
-                                        selected = currentScreen == screenEnum,
-                                        onClick = { currentScreen = screenEnum },
-                                        icon = {
-                                            Icon (
-                                                imageVector = (if (currentScreen == screenEnum) screenEnum.selectedIcon
-                                                else screenEnum.unselectedIcon)!!,
-                                                contentDescription = stringResource(screenEnum.labelResource),
+                            navBarScreens.forEach { screenEnum ->
+                                NavigationBarItem (
+                                    selected = currentScreen == screenEnum,
+                                    onClick = { currentScreen = screenEnum },
+                                    icon = {
+                                        Icon (
+                                            imageVector = (if (currentScreen == screenEnum) screenEnum.selectedIcon
+                                            else screenEnum.unselectedIcon)!!,
+                                            contentDescription = stringResource(screenEnum.labelResource),
+                                        )
+                                    },
+                                    label = {
+                                        if (!isNavBarCompact)
+                                            Text (
+                                                text = stringResource(screenEnum.labelResource),
                                             )
-                                        },
-                                        label = {
-                                            if (!isNavBarCompact)
-                                                Text (
-                                                    text = stringResource(screenEnum.labelResource),
-                                                )
-                                        },
-                                        colors = NavigationBarItemDefaults.colors(
-                                            indicatorColor = MaterialTheme.colorScheme.background,
-                                            selectedIconColor = MaterialTheme.colorScheme.onBackground,
-                                            selectedTextColor = MaterialTheme.colorScheme.onBackground
-                                        ),
-                                    )
-                                }
+                                    },
+                                    colors = NavigationBarItemDefaults.colors(
+                                        indicatorColor = MaterialTheme.colorScheme.background,
+                                        selectedIconColor = MaterialTheme.colorScheme.onBackground,
+                                        selectedTextColor = MaterialTheme.colorScheme.onBackground
+                                    ),
+                                )
                             }
                         }
                     }
