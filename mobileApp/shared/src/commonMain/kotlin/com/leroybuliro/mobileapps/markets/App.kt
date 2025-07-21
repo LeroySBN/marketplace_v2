@@ -1,16 +1,24 @@
 package com.leroybuliro.mobileapps.markets
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeliveryDining
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Settings
@@ -23,34 +31,40 @@ import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import com.leroybuliro.mobileapps.markets.domain.Cart
 import com.leroybuliro.mobileapps.markets.domain.Product
 import com.leroybuliro.mobileapps.markets.presentation.cart_list.CartListScreen
 import com.leroybuliro.mobileapps.markets.presentation.product_detail.ProductDetailScreen
 import com.leroybuliro.mobileapps.markets.presentation.product_list.ProductListScreen
 import com.leroybuliro.mobileapps.markets.presentation.settings_list.SettingsListScreen
+import com.leroybuliro.mobileapps.markets.presentation.theme.DarkColorPalette
+import com.leroybuliro.mobileapps.markets.presentation.theme.LightColorPalette
 import markets.shared.generated.resources.Res
 import markets.shared.generated.resources.account
 import markets.shared.generated.resources.cart_tab
@@ -64,8 +78,10 @@ import markets.shared.generated.resources.wallet_tab
 import markets.shared.generated.resources.wishlist_tab
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
-private val products = (1..10).map {
+private val products = (1..40).map {
     Product(
         id = it,
         name = "Paxton Three Seater",
@@ -86,7 +102,7 @@ private val products = (1..10).map {
     )
 }
 
-private val carts = (1..7).map {
+private val carts = (1..20).map {
     Cart(
         id = it,
         name = "SteamDeck LED",
@@ -146,11 +162,18 @@ fun App() {
     var currentScreen by remember { mutableStateOf(Screen.ProductList) }
     var isDarkMode by remember { mutableStateOf(false) }
     var isNavBarCompact by remember { mutableStateOf(false) }
+    val lazyListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     val backgroundColor = if (isDarkMode) Color(0xFFBBBBBB) else Color.White
     val toggleTheme = { isDarkMode = !isDarkMode }
     val toggleNavBar = { isNavBarCompact = !isNavBarCompact }
-    val coroutineScope = rememberCoroutineScope()
+//    val isNavBarVisible by remember {
+//        derivedStateOf {
+//            !lazyListState.isScrollInProgress
+//        }
+//    }
+    var isNavBarVisible by remember { mutableStateOf(true) }
 
     val navBarScreens = listOf(
         Screen.ProductList,
@@ -160,171 +183,250 @@ fun App() {
         Screen.Orders
     )
 
-    MaterialTheme {
-        Surface(
+    LaunchedEffect(lazyListState) {
+        // Store the previous scroll position.
+        // Initialize with a value that ensures the first scroll event is processed correctly.
+        // Using 0 for both assumes that any initial scroll will be either "down" from the top
+        // or the list is already not at the exact top.
+        var previousFirstVisibleItemIndex = lazyListState.firstVisibleItemIndex
+        var previousFirstVisibleItemScrollOffset = lazyListState.firstVisibleItemScrollOffset
+
+        snapshotFlow { lazyListState.firstVisibleItemIndex to lazyListState.firstVisibleItemScrollOffset }
+            .map { (currentIndex, currentOffset) ->
+                // Determine scroll direction
+                val scrolledDown: Boolean? = if (currentIndex > previousFirstVisibleItemIndex) {
+                    true  // Content scrolled DOWN (user's finger moved UP)
+                } else if (currentIndex < previousFirstVisibleItemIndex) {
+                    false // Content scrolled UP (user's finger moved DOWN)
+                } else {
+                    // Same item, check offset for more granular direction
+                    if (currentOffset > previousFirstVisibleItemScrollOffset) {
+                        true // Content scrolled DOWN within the same item
+                    } else if (currentOffset < previousFirstVisibleItemScrollOffset) {
+                        false // Content scrolled UP within the same item
+                    } else {
+                        null // No significant scroll, or change is too small to determine direction
+                    }
+                }
+
+                // Update previous positions *before* deciding visibility for the next emission.
+                // This makes the logic simpler as we compare the *current* scroll to the *previous* one.
+                previousFirstVisibleItemIndex = currentIndex
+                previousFirstVisibleItemScrollOffset = currentOffset
+
+                // Visibility logic based on direction:
+                when (scrolledDown) {
+                    true -> false // Scrolled DOWN, so HIDE NavBar
+                    false -> true  // Scrolled UP, so SHOW NavBar
+                    null -> isNavBarVisible // No change in determined direction, keep current visibility
+                }
+            }
+            .distinctUntilChanged() // Only update if the visibility decision actually changes
+            .collect { shouldBeVisible ->
+                isNavBarVisible = shouldBeVisible
+            }
+    }
+
+    MaterialTheme (
+        colorScheme = if (isDarkMode) DarkColorPalette else LightColorPalette
+    ) {
+        Surface (
             modifier = Modifier
                 .fillMaxSize()
-                .background(backgroundColor)
-                .statusBarsPadding()
+                .statusBarsPadding(),
         ) {
-            if (currentScreen == Screen.SettingsList)
-                SettingsListScreen(
-                    isDarkTheme = isDarkMode,
-                    onToggleTheme = toggleTheme,
-                    onToggleNavBar = toggleNavBar,
-                    isNavBarCompact = isNavBarCompact,
-                    onClose = { currentScreen = Screen.ProductList }
-                )
-            else
-                Scaffold(
-                    topBar = {
-                        // TODO: Implement new AppBar Component
-                        CenterAlignedTopAppBar(
-                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                                backgroundColor),
-                            title = {
-                                Text(
-                                    text = when (currentScreen) {
-                                        Screen.Wishlist -> stringResource(Res.string.wishlist_tab)
-                                        Screen.Wallet -> stringResource(Res.string.wallet_tab)
-                                        Screen.CartList -> stringResource(Res.string.cart_tab)
-                                        Screen.Orders -> stringResource(Res.string.orders_tab)
-                                        else -> stringResource(Res.string.shop_tab)
+            Scaffold (
+                topBar = {
+                    // TODO: Implement new AppBar Component
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text (
+                                text = when (currentScreen) {
+                                    Screen.Wishlist -> stringResource(Res.string.wishlist_tab)
+                                    Screen.Wallet -> stringResource(Res.string.wallet_tab)
+                                    Screen.CartList -> stringResource(Res.string.cart_tab)
+                                    Screen.Orders -> stringResource(Res.string.orders_tab)
+                                    Screen.SettingsList -> stringResource(Res.string.settings)
+                                    else -> stringResource(Res.string.shop_tab)
+                                },
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                style =  MaterialTheme.typography.titleLarge
+                            )
+                        },
+                        navigationIcon = {
+                            if (currentScreen in listOf(Screen.ProductList, Screen.ProductDetail, Screen.SettingsList)) {
+                                // TODO: Implement currentScreen navigation and animations
+                                IconButton (
+                                    onClick = {
+                                        currentScreen =
+                                            if (currentScreen != Screen.ProductList) Screen.ProductList
+                                            else Screen.SettingsList
                                     },
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style =  MaterialTheme.typography.displaySmall
-                                )
-                            },
-                            navigationIcon = {
-                                if (currentScreen == Screen.ProductList || currentScreen == Screen.ProductDetail) {
-                                    // TODO: Implement currentScreen navigation and animations
-                                    IconButton(
-                                        onClick = {
-                                            currentScreen =
-                                                if (currentScreen == Screen.ProductDetail) Screen.ProductList
-                                                else Screen.SettingsList
+                                    enabled = true,
+                                ) {
+                                    Icon (
+                                        imageVector = when (currentScreen) {
+                                            Screen.ProductList -> Icons.Filled.Settings
+                                            Screen.SettingsList -> Icons.Filled.Close
+                                            else -> Icons.Filled.ArrowBackIosNew
                                         },
-                                        enabled = true,
-                                    ) {
-                                        Icon(
-                                            imageVector = if (currentScreen == Screen.ProductList) Icons.Filled.Settings
-                                            else Icons.Filled.ArrowBackIosNew,
-                                            contentDescription = if (currentScreen == Screen.ProductList) stringResource(Res.string.settings)
-                                            else stringResource(Res.string.shop_tab),
-                                        )
-                                    }
+                                        contentDescription = if (currentScreen == Screen.ProductList) stringResource(Res.string.settings)
+                                        else stringResource(Res.string.shop_tab),
+                                    )
                                 }
-                            },
-                            actions = {
-                                if (currentScreen == Screen.ProductList) {
-                                    IconButton(
-                                        onClick = { /* doSomething() */ }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.AccountCircle,
-                                            contentDescription = stringResource(Res.string.account)
-                                        )
-                                    }
+                            }
+                        },
+                        actions = {
+                            if (currentScreen == Screen.ProductList) {
+                                IconButton (
+                                    onClick = { /* doSomething() */ }
+                                ) {
+                                    Icon (
+                                        imageVector = Icons.Filled.AccountCircle,
+                                        contentDescription = stringResource(Res.string.account)
+                                    )
                                 }
-                            },
-                        )
-                    },
-                    bottomBar = {
-                        // TODO: Implement new Toolbar Component
-                        NavigationBar(
-                            modifier = Modifier.background(backgroundColor),
+                            }
+                        },
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                            titleContentColor = MaterialTheme.colorScheme.onBackground,
+                            actionIconContentColor = MaterialTheme.colorScheme.onBackground,
+                        ),
+                        scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+                    )
+                },
+                bottomBar = {
+                    // TODO: Implement new Toolbar Component
+                    if (currentScreen != Screen.SettingsList) {
+                        AnimatedVisibility (
+                            visible = isNavBarVisible,
+                            enter = slideInVertically(
+                                animationSpec = tween(250),
+                                initialOffsetY = { it }),
+                            exit = slideOutVertically(
+                                animationSpec = tween(250),
+                                targetOffsetY = { it }),
                         ) {
-                            navBarScreens.forEach { screenEnum ->
-                                NavigationBarItem(
-                                    selected = currentScreen == screenEnum,
-                                    onClick = { currentScreen = screenEnum },
-                                    icon = {
-                                            Icon(
+                            NavigationBar (
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.onBackground,
+                                tonalElevation = 16.dp,
+                                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
+                            ) {
+                                navBarScreens.forEach { screenEnum ->
+                                    NavigationBarItem (
+                                        selected = currentScreen == screenEnum,
+                                        onClick = { currentScreen = screenEnum },
+                                        icon = {
+                                            Icon (
                                                 imageVector = (if (currentScreen == screenEnum) screenEnum.selectedIcon
                                                 else screenEnum.unselectedIcon)!!,
                                                 contentDescription = stringResource(screenEnum.labelResource),
                                             )
-                                    },
-                                    label = { if (!isNavBarCompact) Text(stringResource(screenEnum.labelResource)) },
+                                        },
+                                        label = {
+                                            if (!isNavBarCompact)
+                                                Text (
+                                                    text = stringResource(screenEnum.labelResource),
+                                                )
+                                        },
+                                        colors = NavigationBarItemDefaults.colors(
+                                            indicatorColor = MaterialTheme.colorScheme.background,
+                                            selectedIconColor = MaterialTheme.colorScheme.onBackground,
+                                            selectedTextColor = MaterialTheme.colorScheme.onBackground
+                                        ),
+                                    )
+                                }
+                            }
+                        }
+                    }
+                },
+                snackbarHost = {},
+//                floatingActionButton = {},
+//                floatingActionButtonPosition = FabPosition.End,
+                contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
+            ) { innerPadding ->
+                Column (
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .consumeWindowInsets(innerPadding)
+                        .padding(innerPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    when (currentScreen) {
+                        Screen.ProductList -> {
+                            ProductListScreen (
+                                isDarkTheme = isDarkMode,
+                                onAction = { currentScreen = Screen.ProductDetail },
+                                products = products,
+                            )
+                        }
+                        Screen.ProductDetail -> {
+                            ProductDetailScreen (
+//                                state = lazyListState,
+                                isDarkTheme = isDarkMode,
+                                product = products[0],
+                            )
+                        }
+                        Screen.CartList -> {
+                            CartListScreen (
+                                state = lazyListState,
+                                isDarkTheme = isDarkMode,
+                                cart = carts,
+                                onAction = { currentScreen = Screen.ProductDetail }
+                            )
+                        }
+                        Screen.Wishlist -> {
+                            Column (
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Looks like you got here early!",
+                                    style = MaterialTheme.typography.titleLarge
                                 )
                             }
                         }
-                    },
-                    snackbarHost = {},
-                    floatingActionButton = {},
-                    floatingActionButtonPosition = FabPosition.End,
-                    contentWindowInsets = ScaffoldDefaults.contentWindowInsets,
-                ) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(backgroundColor)
-                            .consumeWindowInsets(innerPadding)
-                            .padding(innerPadding),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        when (currentScreen) {
-                            Screen.ProductList -> {
-                                ProductListScreen(
-                                    isDarkTheme = isDarkMode,
-                                    onAction = { currentScreen = Screen.ProductDetail },
-                                    products = products,
+                        Screen.Wallet -> {
+                            Column (
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Looks like you got here early!",
+                                    style = MaterialTheme.typography.titleLarge
                                 )
                             }
-                            Screen.ProductDetail -> {
-                                ProductDetailScreen(
-                                    isDarkTheme = isDarkMode,
-                                    product = products[0],
+                        }
+                        Screen.Orders -> {
+                            Column (
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Looks like you got here early!",
+                                    style = MaterialTheme.typography.titleLarge
                                 )
                             }
-                            Screen.CartList -> {
-                                CartListScreen(
-                                    isDarkTheme = isDarkMode,
-                                    cart = carts,
-                                    onAction = { currentScreen = Screen.ProductDetail }
-                                )
-                            }
-                            Screen.Wishlist -> {
-                                Column (
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = "Looks like you got here early!",
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
-                                }
-                            }
-                            Screen.Wallet -> {
-                                Column (
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = "Looks like you got here early!",
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
-                                }
-                            }
-                            Screen.Orders -> {
-                                Column (
-                                    modifier = Modifier.fillMaxSize(),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Text(
-                                        text = "Looks like you got here early!",
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
-                                }
-                            }
-                            else -> Text("Unhandled Screen: ${currentScreen.name}")
+                        }
+                        Screen.SettingsList -> {
+                            SettingsListScreen (
+                                isDarkTheme = isDarkMode,
+                                onToggleTheme = toggleTheme,
+                                onToggleNavBar = toggleNavBar,
+                                isNavBarCompact = isNavBarCompact,
+                            )
                         }
                     }
                 }
+            }
         }
     }
 }

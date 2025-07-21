@@ -1,6 +1,7 @@
 package com.leroybuliro.mobileapps.markets.presentation.cart_list
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -14,6 +15,7 @@ import com.leroybuliro.mobileapps.markets.presentation.theme.LightColorPalette
 
 @Composable
 fun CartListScreen(
+    state: LazyListState,
     cart: List<Cart>,
     isDarkTheme: Boolean,
     onAction: () -> Unit,
@@ -43,6 +45,7 @@ fun CartListScreen(
             color = MaterialTheme.colorScheme.background,
         ) {
             CartList(
+                scrollState = state,
                 onCartClick = onAction,
                 cart = cart
             )

@@ -9,5 +9,5 @@ data class Cart(
     val price: Double,
     val offerPrice: Double,
     val stock: Int?,
-    val quantity: Int?,
+    var quantity: Int?,
 )

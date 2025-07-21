@@ -60,7 +60,6 @@ fun CartListItem(
                 ) {
                     Text(
                         text = cart.name,
-                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyLarge,
@@ -79,11 +78,11 @@ fun CartListItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FilledIconButton(
-                    onClick = {},
+                    onClick = { },
                     modifier = modifier.size(32.dp),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
                     )
                 ) {
                     Icon(
@@ -93,17 +92,17 @@ fun CartListItem(
                 }
                 Text(
                     text = cart.quantity.toString(),
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 FilledIconButton(
-                    onClick = {},
+                    onClick = { },
                     modifier = modifier.size(32.dp),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onSurface,
+                        contentColor = MaterialTheme.colorScheme.onBackground,
                     )
                 ) {
                     Icon(

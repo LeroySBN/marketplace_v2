@@ -34,23 +34,15 @@ fun ProductDetailItem(
         modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        LazyColumn (
-            modifier = modifier
-                .padding(
-                    top = 0.dp,
-                    bottom = 24.dp,
-                    start = 0.dp,
-                    end = 0.dp
-                ),
-        ) {
+        LazyColumn {
             item {
-                Box(
+                Box (
                     modifier = modifier.padding(0.dp)
                 ) {
-                    LazyRow(
+                    LazyRow (
                         modifier = modifier.fillMaxWidth(),
                     ) {
-                        items(
+                        items (
                             count = product.image.size
                         ) { item ->
                             Image(
@@ -61,7 +53,7 @@ fun ProductDetailItem(
                         }
                     }
                 }
-                Column(
+                Column (
                     modifier = modifier.padding(
                         start = 8.dp,
                         end = 8.dp,
@@ -70,14 +62,13 @@ fun ProductDetailItem(
                     ),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Text(
+                    Text (
                         text = product.category + " > " + product.name,
-                        color = Color.Black,
                         maxLines = 2,
                         overflow = TextOverflow.Clip,
                         style = MaterialTheme.typography.bodyMedium,
                     )
-                    Row(
+                    Row (
                         modifier = modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom,
@@ -91,35 +82,20 @@ fun ProductDetailItem(
                             style = MaterialTheme.typography.titleLarge
                         )
                     }
-                    Column(
-                        modifier = modifier.padding(0.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.description),
-                            fontWeight = FontWeight.Bold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Text(
-                            text = product.description.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            overflow = TextOverflow.Visible,
-                        )
-                    }
+                    Text (
+                        text = stringResource(Res.string.description),
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text (
+                        text = product.description.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Visible,
+                    )
                 }
             }
         }
-//        Column(
-//            modifier = modifier
-//                .padding(
-//                    top = 0.dp,
-//                    bottom = 24.dp,
-//                    start = 0.dp,
-//                    end = 0.dp
-//                ),
-//        ) {
-//        }
     }
 }

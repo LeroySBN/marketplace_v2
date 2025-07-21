@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -55,7 +56,6 @@ fun SettingsListScreen(
     onToggleTheme: () -> Unit,
     onToggleNavBar: () -> Unit,
 //    onAction: (SettingsListAction) -> Unit,
-    onClose: () -> Unit
 ){
     MaterialTheme (
         colorScheme = if (isDarkTheme) DarkColorPalette else LightColorPalette
@@ -64,241 +64,228 @@ fun SettingsListScreen(
             color = MaterialTheme.colorScheme.background,
             modifier = modifier.fillMaxSize(),
         ) {
-            Column (
+            LazyColumn (
                 modifier = modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Row (
-                    modifier = modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton (
-                        onClick = onClose,
-                        enabled = true,
+                item {
+                    Column(
+                        modifier = modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(32.dp),
                     ) {
-                        Icon (
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = stringResource(Res.string.close)
-                        )
-                    }
-                    Text (
-                        text = stringResource(Res.string.settings),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                }
-                Column (
-                    modifier = modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(32.dp),
-                ) {
-                    Column (
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.settings_title_app),
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(0.dp),
+                            Text(
+                                text = stringResource(Res.string.settings_title_app),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant,
                             ) {
-
-                                // LANGUAGE
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(0.dp),
                                 ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_language),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isDarkTheme,
-                                        onCheckedChange = { onToggleTheme }
+
+                                    // LANGUAGE
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ChevronRight,
-                                            contentDescription = stringResource(Res.string.settings_language),
+                                        Text(
+                                            text = stringResource(Res.string.settings_language),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isDarkTheme,
+                                            onCheckedChange = { onToggleTheme }
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.ChevronRight,
+                                                contentDescription = stringResource(Res.string.settings_language),
+                                            )
+                                        }
                                     }
-                                }
 
-                                // THEME
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_theme),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isDarkTheme,
-                                        onCheckedChange = { onToggleTheme }
+                                    // DARK MODE
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = if (isDarkTheme) Icons.Filled.ToggleOn
-                                            else Icons.Filled.ToggleOff,
-                                            contentDescription = if (isDarkTheme) stringResource(Res.string.theme_off)
-                                            else stringResource(Res.string.theme_on),
+                                        Text(
+                                            text = stringResource(Res.string.settings_theme),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isDarkTheme,
+                                            onCheckedChange = { onToggleTheme() }
+                                        ) {
+                                            Icon(
+                                                imageVector = if (isDarkTheme) Icons.Filled.ToggleOn
+                                                else Icons.Filled.ToggleOff,
+                                                contentDescription = if (isDarkTheme) stringResource(
+                                                    Res.string.theme_off
+                                                )
+                                                else stringResource(Res.string.theme_on),
+                                            )
+                                        }
                                     }
-                                }
 
-                                // NAVBAR
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_navbar),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isNavBarCompact,
-                                        onCheckedChange = { onToggleNavBar }
+                                    // NAVBAR
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = if (isNavBarCompact) Icons.Filled.ToggleOn
-                                            else Icons.Filled.ToggleOff,
-                                            contentDescription = if (isNavBarCompact) stringResource(Res.string.navbar_normal)
-                                            else stringResource(Res.string.navbar_compact),
+                                        Text(
+                                            text = stringResource(Res.string.settings_navbar),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isNavBarCompact,
+                                            onCheckedChange = { onToggleNavBar() }
+                                        ) {
+                                            Icon(
+                                                imageVector = if (isNavBarCompact) Icons.Filled.ToggleOn
+                                                else Icons.Filled.ToggleOff,
+                                                contentDescription = if (isNavBarCompact) stringResource(
+                                                    Res.string.navbar_normal
+                                                )
+                                                else stringResource(Res.string.navbar_compact),
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.settings_title_general),
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                        Surface(
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(0.dp),
+                            Text(
+                                text = stringResource(Res.string.settings_title_general),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Surface(
+                                shape = RoundedCornerShape(8.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant,
                             ) {
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(0.dp),
                                 ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_section_website),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isDarkTheme,
-                                        onCheckedChange = {}
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ChevronRight,
-                                            contentDescription = stringResource(Res.string.settings_section_website),
+                                        Text(
+                                            text = stringResource(Res.string.settings_section_website),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isDarkTheme,
+                                            onCheckedChange = {}
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.ChevronRight,
+                                                contentDescription = stringResource(Res.string.settings_section_website),
+                                            )
+                                        }
                                     }
-                                }
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_section_rating),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isDarkTheme,
-                                        onCheckedChange = {}
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ChevronRight,
-                                            contentDescription = stringResource(Res.string.settings_section_rating),
+                                        Text(
+                                            text = stringResource(Res.string.settings_section_rating),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isDarkTheme,
+                                            onCheckedChange = {}
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.ChevronRight,
+                                                contentDescription = stringResource(Res.string.settings_section_rating),
+                                            )
+                                        }
                                     }
-                                }
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_section_apps),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isDarkTheme,
-                                        onCheckedChange = {}
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ChevronRight,
-                                            contentDescription = stringResource(Res.string.settings_section_apps),
+                                        Text(
+                                            text = stringResource(Res.string.settings_section_apps),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isDarkTheme,
+                                            onCheckedChange = {}
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.ChevronRight,
+                                                contentDescription = stringResource(Res.string.settings_section_apps),
+                                            )
+                                        }
                                     }
-                                }
-                                Row(
-                                    modifier = modifier
-                                        .padding(8.dp)
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = stringResource(Res.string.settings_section_feedback),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                    )
-                                    IconToggleButton(
-                                        checked = isDarkTheme,
-                                        onCheckedChange = {}
+                                    Row(
+                                        modifier = modifier
+                                            .padding(8.dp)
+                                            .fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Filled.ChevronRight,
-                                            contentDescription = stringResource(Res.string.settings_section_feedback),
+                                        Text(
+                                            text = stringResource(Res.string.settings_section_feedback),
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
+                                        IconToggleButton(
+                                            checked = isDarkTheme,
+                                            onCheckedChange = {}
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Filled.ChevronRight,
+                                                contentDescription = stringResource(Res.string.settings_section_feedback),
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(0.dp),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.app_title) + " " +
-                                    stringResource(Res.string.app_version) + " (" +
-                                    stringResource(Res.string.app_build) + ")",
-                            modifier = modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                        Text(
-                            text = stringResource(Res.string.app_creator_credits),
-                            modifier = modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall,
-                        )
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(0.dp),
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.app_title) + " " +
+                                        stringResource(Res.string.app_version) + " (" +
+                                        stringResource(Res.string.app_build) + ")",
+                                modifier = modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                            Text(
+                                text = stringResource(Res.string.app_creator_credits),
+                                modifier = modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.bodySmall,
+                            )
+                        }
                     }
                 }
             }
