@@ -68,7 +68,7 @@ fun ProductListItem(
                     text = product.name,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.inversePrimary,
                     maxLines = 1,
                 )
                 Row(
@@ -82,6 +82,7 @@ fun ProductListItem(
                         overflow = TextOverflow.Ellipsis,
                         text = "Ksh " + product.price.toString(),
                         style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary,
                     )
                     IconButton(
                         onClick = onClick,

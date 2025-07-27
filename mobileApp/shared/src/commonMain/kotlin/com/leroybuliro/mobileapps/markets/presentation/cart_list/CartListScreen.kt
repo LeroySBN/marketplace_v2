@@ -1,11 +1,14 @@
 package com.leroybuliro.mobileapps.markets.presentation.cart_list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
 import androidx.compose.material.icons.filled.ShoppingCartCheckout
@@ -54,7 +57,11 @@ fun CartListScreen(
                     onClick = { },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(8.dp)
+                        .height(48.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = RoundedCornerShape(8.dp)),
                     text = {
                         Text(
                             text = stringResource(Res.string.cart_checkout)
@@ -66,8 +73,8 @@ fun CartListScreen(
                             contentDescription = stringResource(Res.string.cart_checkout)
                         )
                     },
-                    containerColor = Color.Red,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     expanded = true
                 )
             },

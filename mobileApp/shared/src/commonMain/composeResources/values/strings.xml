@@ -8,9 +8,23 @@
 
     <string name="shop_tab">Shop</string>
     <string name="search_tab">Categories</string>
-    <string name="wishlist_tab">Wishlist</string>
     <string name="wallet_tab">Wallet</string>
     <string name="orders_tab">Orders</string>
+
+    <string name="sell_tab">Sell</string>
+    <string name="sell_title">Sell an item</string>
+    <string name="sell_add_photo">Add a photo</string>
+    <string name="sell_photo_tip_1">Add up to 7 photos</string>
+    <string name="sell_photo_tip_2">Click and drag to rearrange</string>
+    <string name="sell_delete_photo">Delete photo</string>
+    <string name="sell_header">Title</string>
+    <string name="sell_describe">Describe your item</string>
+    <string name="sell_category">Category</string>
+    <string name="sell_sub_category">Sub-Category</string>
+    <string name="sell_material">Material</string>
+    <string name="sell_price">Price</string>
+    <string name="sell_stock">Stock</string>
+    <string name="sell_upload">Upload</string>
 
     <string name="description">Description</string>
     <string name="add_cart">Add to Cart</string>

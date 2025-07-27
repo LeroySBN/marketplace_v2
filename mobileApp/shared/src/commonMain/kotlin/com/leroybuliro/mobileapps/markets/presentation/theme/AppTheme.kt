@@ -7,31 +7,47 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val LightColorPalette = lightColorScheme(
-    primary = Color(0xFF2196F3),      // Blue
+    primary = Color(0xFF191210),
     onPrimary = Color.White,
-    inversePrimary = Color(0xFF1976D2),
-    secondary = Color(0xFFFF9800),     // Orange
+    primaryContainer = Color(0xFF009688),
+    onPrimaryContainer = Color.White,
+//    inversePrimary = Color(0xFF8c665a),
+    inversePrimary = Color(0xFF888888),
+    secondary = Color(0xFFFF9800),
     onSecondary = Color.Black,
+    secondaryContainer = Color(0xFFf1ebe9),
+    onSecondaryContainer = Color(0xFF191210),
+    onTertiary = Color(0xFFB00020),
     background = Color.White,
     onBackground = Color.Black,
-    surface = Color(0xFFF5F5F5),       // Very light gray
+//    surface = Color(0xFFF5F5F5),
+    surface = Color(0xFFF6F6F6),
     onSurface = Color.Black,
+    surfaceVariant = Color(0xFFfbf9f9),
+    onSurfaceVariant = Color(0xFF8c665a),
     error = Color(0xFFB00020),
     onError = Color.White
 )
 
 val DarkColorPalette = darkColorScheme(
-    primary = Color(0xFF64B5F6),      // Light blue
-    onPrimary = Color.Black,           // Black text on light blue
-    inversePrimary = Color(0xFF42A5F5),
-    secondary = Color(0xFFFFCC80),     // Light orange
-    onSecondary = Color.Black,         // Black text on light orange
-    background = Color(0xFF212121),
-    onBackground = Color.White,        // Black text on medium gray
-    surface = Color(0xFFDDDDDD),       // Light gray surface
-    onSurface = Color.Black,           // Black text on light gray
+    primary = Color.White,
+    onPrimary = Color.Black,
+    primaryContainer = Color(0xFF05d5c0),
+    onPrimaryContainer = Color(0xFF102321),
+    inversePrimary = Color(0xFF8eccc6),
+    secondary = Color(0xFFFFCC80),
+    onSecondary = Color.Black,
+    secondaryContainer = Color(0xFF81C784),
+    onSecondaryContainer = Color.White,
+    background = Color(0xFF102321),
+    onBackground = Color.White,
+//    surface = Color(0xFFDDDDDD),
+    surface = Color(0xFF102321),
+    onSurface = Color.Black,
+    surfaceVariant = Color(0xFF183532),
+    onSurfaceVariant = Color(0xFF8ECCC6),
     error = Color(0xFFCF6679),
-    onError = Color.White              // White text on error color
+    onError = Color.White
 )
 
 @Composable

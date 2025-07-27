@@ -66,7 +66,7 @@ fun CartListItem(
                     )
                     Text(
                         text = "Ksh " + cart.price.toString(),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.inversePrimary,
                         maxLines = 1,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -81,8 +81,8 @@ fun CartListItem(
                     onClick = { },
                     modifier = modifier.size(32.dp),
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 ) {
                     Icon(
@@ -101,8 +101,8 @@ fun CartListItem(
                     onClick = { },
                     modifier = modifier.size(32.dp),
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        contentColor = MaterialTheme.colorScheme.onBackground,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 ) {
                     Icon(

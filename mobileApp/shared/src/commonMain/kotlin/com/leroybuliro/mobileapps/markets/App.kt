@@ -5,13 +5,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
@@ -19,13 +19,13 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeliveryDining
-import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Sell
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Store
 import androidx.compose.material.icons.outlined.AccountBalanceWallet
 import androidx.compose.material.icons.outlined.DeliveryDining
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Sell
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.outlined.Store
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -60,9 +60,11 @@ import com.leroybuliro.mobileapps.markets.domain.Product
 import com.leroybuliro.mobileapps.markets.presentation.cart_list.CartListScreen
 import com.leroybuliro.mobileapps.markets.presentation.product_detail.ProductDetailScreen
 import com.leroybuliro.mobileapps.markets.presentation.product_list.ProductListScreen
+import com.leroybuliro.mobileapps.markets.presentation.sell.SellScreen
 import com.leroybuliro.mobileapps.markets.presentation.settings_list.SettingsListScreen
 import com.leroybuliro.mobileapps.markets.presentation.theme.DarkColorPalette
 import com.leroybuliro.mobileapps.markets.presentation.theme.LightColorPalette
+import com.leroybuliro.mobileapps.markets.presentation.wallet.WalletScreen
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import markets.shared.generated.resources.Res
@@ -72,10 +74,11 @@ import markets.shared.generated.resources.led_steamdeck
 import markets.shared.generated.resources.orders_tab
 import markets.shared.generated.resources.paxton_three_seater_1
 import markets.shared.generated.resources.paxton_three_seater_2
+import markets.shared.generated.resources.sell_tab
+import markets.shared.generated.resources.sell_title
 import markets.shared.generated.resources.settings
 import markets.shared.generated.resources.shop_tab
 import markets.shared.generated.resources.wallet_tab
-import markets.shared.generated.resources.wishlist_tab
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -96,7 +99,9 @@ private val products = (1..40).map {
         price = 75000.00,
         offerPrice = 0.0,
         stock = 20,
-        category = "Home"
+        category = "Home",
+        subCategory = "Living Room",
+        material = "Leather"
     )
 }
 
@@ -122,10 +127,10 @@ enum class Screen(
         Icons.Filled.Store,
         Icons.Outlined.Store
     ),
-    Wishlist(
-        Res.string.wishlist_tab,
-        Icons.Filled.Favorite,
-        Icons.Outlined.FavoriteBorder
+    Sell(
+        Res.string.sell_tab,
+        Icons.Filled.Sell,
+        Icons.Outlined.Sell
     ),
     Wallet(
         Res.string.wallet_tab,
@@ -157,7 +162,7 @@ enum class Screen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    var currentScreen by remember { mutableStateOf(Screen.ProductList) }
+    var currentScreen by remember { mutableStateOf(Screen.Sell) }
     var isDarkMode by remember { mutableStateOf(false) }
     var isNavBarCompact by remember { mutableStateOf(false) }
     var isNavBarVisible by remember { mutableStateOf(true) }
@@ -175,7 +180,7 @@ fun App() {
 
     val navBarScreens = listOf(
         Screen.ProductList,
-        Screen.Wishlist,
+        Screen.Sell,
         Screen.Wallet,
         Screen.CartList,
         Screen.Orders
@@ -229,9 +234,7 @@ fun App() {
         colorScheme = if (isDarkMode) DarkColorPalette else LightColorPalette
     ) {
         Surface (
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding(),
+            modifier = Modifier.fillMaxSize(),
         ) {
             Scaffold (
                 topBar = {
@@ -240,7 +243,7 @@ fun App() {
                         title = {
                             Text (
                                 text = when (currentScreen) {
-                                    Screen.Wishlist -> stringResource(Res.string.wishlist_tab)
+                                    Screen.Sell -> stringResource(Res.string.sell_title)
                                     Screen.Wallet -> stringResource(Res.string.wallet_tab)
                                     Screen.CartList -> stringResource(Res.string.cart_tab)
                                     Screen.Orders -> stringResource(Res.string.orders_tab)
@@ -300,7 +303,7 @@ fun App() {
                     // TODO: Implement new Toolbar Component
                     AnimatedVisibility (
                         visible = when (currentScreen) {
-                            Screen.ProductList -> true
+                            Screen.ProductList, Screen.Sell, Screen.Wallet -> true
                             Screen.ProductDetail, Screen.SettingsList -> false
                             else -> isNavBarVisible
                         },
@@ -312,8 +315,8 @@ fun App() {
                             targetOffsetY = { it }),
                     ) {
                         NavigationBar (
-                            containerColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.onBackground,
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                             tonalElevation = 16.dp,
                             windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
@@ -335,7 +338,7 @@ fun App() {
                                             )
                                     },
                                     colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = MaterialTheme.colorScheme.background,
+                                        indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
                                         selectedIconColor = MaterialTheme.colorScheme.onBackground,
                                         selectedTextColor = MaterialTheme.colorScheme.onBackground
                                     ),
@@ -350,72 +353,92 @@ fun App() {
                 Column (
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
+                        .background(MaterialTheme.colorScheme.surface)
                         .consumeWindowInsets(innerPadding)
                         .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     when (currentScreen) {
                         Screen.ProductList -> {
-                            ProductListScreen (
+                            ProductListScreen(
                                 isDarkTheme = isDarkMode,
                                 onAction = { currentScreen = Screen.ProductDetail },
                                 products = products,
                             )
                         }
+
                         Screen.ProductDetail -> {
-                            ProductDetailScreen (
+                            ProductDetailScreen(
                                 state = lazyListState,
                                 isDarkTheme = isDarkMode,
                                 product = products[0],
                             )
                         }
+
                         Screen.CartList -> {
-                            CartListScreen (
+                            CartListScreen(
                                 state = lazyListState,
                                 isDarkTheme = isDarkMode,
                                 cart = carts,
                                 onAction = { currentScreen = Screen.ProductDetail }
                             )
                         }
-                        Screen.Wishlist -> {
-                            Column (
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "Looks like you got here early!",
-                                    style = MaterialTheme.typography.titleLarge
+
+                        Screen.Sell -> {
+                            val sellViewModel =
+                                remember { com.leroybuliro.mobileapps.markets.presentation.sell.SellViewModel() }
+                            Column {
+                                SellScreen(
+                                    onPostProduct = { product ->
+                                        sellViewModel.onAction(
+                                            com.leroybuliro.mobileapps.markets.presentation.sell.SellAction.PostProduct(
+                                                product
+                                            )
+                                        )
+                                    },
+                                    isDarkTheme = isDarkMode,
                                 )
+//                                sellViewModel.state.lastPosted?.let { product ->
+//                                    Spacer(modifier = Modifier.height(16.dp))
+//                                }
+                                sellViewModel.state.lastPosted?.let { product ->
+                                    Spacer(modifier = Modifier.height(16.dp))
+                                    Text("Last posted: ${product.name} (ID: ${product.id})")
+                                }
                             }
                         }
+
                         Screen.Wallet -> {
-                            Column (
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "Looks like you got here early!",
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-                            }
+                            val walletViewModel =
+                                remember { com.leroybuliro.mobileapps.markets.presentation.wallet.WalletViewModel() }
+                            WalletScreen(
+                                balance = walletViewModel.state.balance,
+                                onAddFunds = { amount ->
+                                    walletViewModel.onAction(
+                                        com.leroybuliro.mobileapps.markets.presentation.wallet.WalletAction.AddFunds(
+                                            amount
+                                        )
+                                    )
+                                }
+                            )
                         }
+
                         Screen.Orders -> {
-                            Column (
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "Looks like you got here early!",
-                                    style = MaterialTheme.typography.titleLarge
+                            val orderViewModel =
+                                remember { com.leroybuliro.mobileapps.markets.presentation.order.OrderViewModel() }
+                            // Simulate loading orders for demo
+                            LaunchedEffect(Unit) {
+                                orderViewModel.onAction(
+                                    com.leroybuliro.mobileapps.markets.presentation.order.OrderAction.LoadOrders(
+                                        "demoUser"
+                                    )
                                 )
                             }
+                            com.leroybuliro.mobileapps.markets.presentation.order.OrderScreen(orders = orderViewModel.state.orders)
                         }
+
                         Screen.SettingsList -> {
-                            SettingsListScreen (
+                            SettingsListScreen(
                                 isDarkTheme = isDarkMode,
                                 onToggleTheme = toggleTheme,
                                 onToggleNavBar = toggleNavBar,
