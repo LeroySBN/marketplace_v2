@@ -31,6 +31,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation("io.coil-kt:coil-compose:2.5.0")
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(libs.androidx.lifecycle.viewmodel)
@@ -41,12 +42,19 @@ kotlin {
             implementation(libs.material.icons.extended)
             implementation(libs.compose.material3)
             implementation(libs.compose.material3.adaptive)
+            implementation(libs.ktor.client.cio)
         }
         androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.compose.ui.tooling)
+            implementation(libs.coil.network.okhttp) // Only available on Android/JVM.
+            implementation(libs.coil.network.ktor2)
+            implementation(libs.coil.network.ktor3)
+            implementation(libs.ktor.client.android)
         }
         iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
