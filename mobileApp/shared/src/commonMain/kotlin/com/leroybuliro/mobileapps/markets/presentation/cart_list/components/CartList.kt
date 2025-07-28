@@ -1,6 +1,7 @@
 package com.leroybuliro.mobileapps.markets.presentation.cart_list.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +23,9 @@ fun CartList(
 ) {
     LazyColumn(
         state = scrollState,
-        modifier = modifier.padding(start = 8.dp, end = 8.dp, bottom = 100.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ){
         items(

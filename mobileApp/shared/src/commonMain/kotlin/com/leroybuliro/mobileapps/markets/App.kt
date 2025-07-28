@@ -53,18 +53,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.leroybuliro.mobileapps.markets.domain.Cart
 import com.leroybuliro.mobileapps.markets.domain.Product
 import com.leroybuliro.mobileapps.markets.presentation.cart_list.CartListScreen
+import com.leroybuliro.mobileapps.markets.presentation.order.OrderAction
+import com.leroybuliro.mobileapps.markets.presentation.order.OrderScreen
+import com.leroybuliro.mobileapps.markets.presentation.order.OrderViewModel
 import com.leroybuliro.mobileapps.markets.presentation.product_detail.ProductDetailScreen
 import com.leroybuliro.mobileapps.markets.presentation.product_list.ProductListScreen
+import com.leroybuliro.mobileapps.markets.presentation.sell.SellAction
 import com.leroybuliro.mobileapps.markets.presentation.sell.SellScreen
+import com.leroybuliro.mobileapps.markets.presentation.sell.SellViewModel
 import com.leroybuliro.mobileapps.markets.presentation.settings_list.SettingsListScreen
 import com.leroybuliro.mobileapps.markets.presentation.theme.DarkColorPalette
 import com.leroybuliro.mobileapps.markets.presentation.theme.LightColorPalette
+import com.leroybuliro.mobileapps.markets.presentation.wallet.WalletAction
 import com.leroybuliro.mobileapps.markets.presentation.wallet.WalletScreen
+import com.leroybuliro.mobileapps.markets.presentation.wallet.WalletViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import markets.shared.generated.resources.Res
@@ -162,7 +170,7 @@ enum class Screen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun App() {
-    var currentScreen by remember { mutableStateOf(Screen.Sell) }
+    var currentScreen by remember { mutableStateOf(Screen.ProductList) }
     var isDarkMode by remember { mutableStateOf(false) }
     var isNavBarCompact by remember { mutableStateOf(false) }
     var isNavBarVisible by remember { mutableStateOf(true) }
@@ -252,7 +260,9 @@ fun App() {
                                 },
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                style =  MaterialTheme.typography.titleLarge
+                                style =  MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary,
                             )
                         },
                         navigationIcon = {
@@ -315,8 +325,8 @@ fun App() {
                             targetOffsetY = { it }),
                     ) {
                         NavigationBar (
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onBackground,
                             tonalElevation = 16.dp,
                             windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
@@ -338,9 +348,11 @@ fun App() {
                                             )
                                     },
                                     colors = NavigationBarItemDefaults.colors(
-                                        indicatorColor = MaterialTheme.colorScheme.surfaceVariant,
-                                        selectedIconColor = MaterialTheme.colorScheme.onBackground,
-                                        selectedTextColor = MaterialTheme.colorScheme.onBackground
+                                        indicatorColor = MaterialTheme.colorScheme.background,
+                                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                                        unselectedIconColor = MaterialTheme.colorScheme.onBackground,
+                                        unselectedTextColor = MaterialTheme.colorScheme.onBackground,
                                     ),
                                 )
                             }
@@ -353,7 +365,7 @@ fun App() {
                 Column (
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface)
+                        .background(MaterialTheme.colorScheme.background)
                         .consumeWindowInsets(innerPadding)
                         .padding(innerPadding),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -369,7 +381,6 @@ fun App() {
 
                         Screen.ProductDetail -> {
                             ProductDetailScreen(
-                                state = lazyListState,
                                 isDarkTheme = isDarkMode,
                                 product = products[0],
                             )
@@ -386,12 +397,12 @@ fun App() {
 
                         Screen.Sell -> {
                             val sellViewModel =
-                                remember { com.leroybuliro.mobileapps.markets.presentation.sell.SellViewModel() }
+                                remember { SellViewModel() }
                             Column {
                                 SellScreen(
                                     onPostProduct = { product ->
                                         sellViewModel.onAction(
-                                            com.leroybuliro.mobileapps.markets.presentation.sell.SellAction.PostProduct(
+                                            SellAction.PostProduct(
                                                 product
                                             )
                                         )
@@ -410,31 +421,32 @@ fun App() {
 
                         Screen.Wallet -> {
                             val walletViewModel =
-                                remember { com.leroybuliro.mobileapps.markets.presentation.wallet.WalletViewModel() }
+                                remember { WalletViewModel() }
                             WalletScreen(
+                                isDarkTheme = isDarkMode,
                                 balance = walletViewModel.state.balance,
                                 onAddFunds = { amount ->
                                     walletViewModel.onAction(
-                                        com.leroybuliro.mobileapps.markets.presentation.wallet.WalletAction.AddFunds(
+                                        WalletAction.AddFunds(
                                             amount
                                         )
                                     )
-                                }
+                                },
                             )
                         }
 
                         Screen.Orders -> {
                             val orderViewModel =
-                                remember { com.leroybuliro.mobileapps.markets.presentation.order.OrderViewModel() }
+                                remember { OrderViewModel() }
                             // Simulate loading orders for demo
                             LaunchedEffect(Unit) {
                                 orderViewModel.onAction(
-                                    com.leroybuliro.mobileapps.markets.presentation.order.OrderAction.LoadOrders(
+                                    OrderAction.LoadOrders(
                                         "demoUser"
                                     )
                                 )
                             }
-                            com.leroybuliro.mobileapps.markets.presentation.order.OrderScreen(orders = orderViewModel.state.orders)
+                            OrderScreen(orders = orderViewModel.state.orders)
                         }
 
                         Screen.SettingsList -> {

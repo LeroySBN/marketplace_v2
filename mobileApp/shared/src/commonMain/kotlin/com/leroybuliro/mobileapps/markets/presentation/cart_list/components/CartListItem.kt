@@ -36,9 +36,7 @@ fun CartListItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Surface(
-        color = MaterialTheme.colorScheme.background,
-        ) {
+    Surface {
         Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -52,8 +50,7 @@ fun CartListItem(
                 Image(
                     painter = painterResource(resource = cart.image),
                     contentDescription = cart.name,
-                    modifier = modifier
-                        .width(100.dp),
+                    modifier = modifier.width(100.dp),
                 )
                 Column(
                     modifier
@@ -63,6 +60,7 @@ fun CartListItem(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = "Ksh " + cart.price.toString(),

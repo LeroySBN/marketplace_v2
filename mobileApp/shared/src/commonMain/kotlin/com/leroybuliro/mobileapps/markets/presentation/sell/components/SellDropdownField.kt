@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -44,13 +46,13 @@ fun SellDropdownField(
                 IconButton(
                     onClick = { expanded = !expanded }
                 ) {
-                    Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                    Icon(Icons.Default.ChevronRight, contentDescription = null)
                 }
             },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                disabledContainerColor = MaterialTheme.colorScheme.background,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
                 unfocusedTextColor = MaterialTheme.colorScheme.primary,
                 disabledTextColor = MaterialTheme.colorScheme.inversePrimary,
@@ -62,7 +64,11 @@ fun SellDropdownField(
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = {
+                        Text(
+                            text = option,
+                            color = MaterialTheme.colorScheme.primary
+                        ) },
                     onClick = {
                         onSelected(option)
                         expanded = false

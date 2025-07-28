@@ -21,7 +21,7 @@ fun ProductListScreen(
         colorScheme = if (isDarkTheme) DarkColorPalette else LightColorPalette
     ) {
         Surface (
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.surface,
         ) {
             ProductList(
                 onProductClick = onAction,

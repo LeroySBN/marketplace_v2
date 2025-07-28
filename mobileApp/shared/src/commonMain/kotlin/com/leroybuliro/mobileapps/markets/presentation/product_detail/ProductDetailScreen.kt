@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
@@ -18,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.leroybuliro.mobileapps.markets.domain.Product
 import com.leroybuliro.mobileapps.markets.presentation.product_detail.components.ProductDetailItem
@@ -31,7 +29,6 @@ import org.jetbrains.compose.resources.stringResource
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    state: LazyListState,
     product: Product,
     isDarkTheme: Boolean,
 //    onAction: (ProductDetailAction) -> Unit,
@@ -69,7 +66,6 @@ fun ProductDetailScreen(
             floatingActionButtonPosition = FabPosition.Center
         ) { innerPadding ->
             ProductDetailItem(
-                scrollState = state,
                 product = product
             )
         }

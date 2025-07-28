@@ -41,7 +41,6 @@ fun ProductListItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        color = MaterialTheme.colorScheme.background,
     ) {
         Column {
             Box (

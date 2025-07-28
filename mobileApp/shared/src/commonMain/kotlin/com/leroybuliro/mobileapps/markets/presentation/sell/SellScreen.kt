@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -98,7 +99,7 @@ fun SellScreen(
     MaterialTheme(colorScheme = if (isDarkTheme) DarkColorPalette else LightColorPalette) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.surface,
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = {
@@ -149,7 +150,8 @@ fun SellScreen(
                         .height(48.dp)
                         .background(
                             color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = RoundedCornerShape(8.dp)),
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                     text = {
                         Text(
                             text = stringResource(Res.string.sell_upload)
@@ -171,8 +173,8 @@ fun SellScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .verticalScroll(verticalScrollState),
+                    .verticalScroll(verticalScrollState)
+                    .padding(start = 0.dp, top = 0.dp, end = 0.dp, bottom = 100.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
 // Image carousel
@@ -180,7 +182,7 @@ fun SellScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(240.dp)
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(MaterialTheme.colorScheme.tertiaryContainer),
                     contentAlignment = Alignment.Center,
                 ) {
                     Column(
@@ -265,130 +267,144 @@ fun SellScreen(
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surface)
                 )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 0.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                ) {
 // Name and Description text fields
-                Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(horizontal = 8.dp, vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // Name text field
-                    TextInputField(
-                        label = stringResource(Res.string.sell_header),
-                        value = name,
-                        onValueChange = setName,
-                        minLines = 1,
-                        maxLines = 1,
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
                             .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                    )
-                    // Description text field
-                    TextInputField(
-                        label = stringResource(Res.string.sell_describe),
-                        value = desc,
-                        onValueChange = setDesc,
-                        minLines = 6,
-                        maxLines = 10,
+                                color = MaterialTheme.colorScheme.surfaceContainer,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+// Name text field
+                        TextInputField(
+                            label = stringResource(Res.string.sell_header),
+                            value = name,
+                            onValueChange = setName,
+                            minLines = 1,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.background,
+                                    shape = RoundedCornerShape(8.dp)
+                                ),
+                        )
+                        // Description text field
+                        TextInputField(
+                            label = stringResource(Res.string.sell_describe),
+                            value = desc,
+                            onValueChange = setDesc,
+                            minLines = 6,
+                            maxLines = 10,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.background,
+                                    shape = RoundedCornerShape(8.dp)
+                                ),
+                        )
+                    }
+                    Spacer(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(8.dp)
-                            ),
+                            .height(8.dp)
+                            .background(MaterialTheme.colorScheme.surface)
                     )
-                }
-                Spacer(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                )
 // Category and Material dropdowns in column
-                Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(horizontal = 8.dp, vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // Category
-                    SellDropdownField(
-                        label = stringResource(Res.string.sell_category),
-                        options = categoryOptions,
-                        selected = category,
-                        onSelected = setCategory,
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = true
+                    Column(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceContainer,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Category
+                        SellDropdownField(
+                            label = stringResource(Res.string.sell_category),
+                            options = categoryOptions,
+                            selected = category,
+                            onSelected = setCategory,
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = true
+                        )
+                        // Sub-Category
+                        SellDropdownField(
+                            label = stringResource(Res.string.sell_sub_category),
+                            options = subCategoryOptions,
+                            selected = subCategory,
+                            onSelected = setSubCategory,
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = category.isNotBlank()
+                        )
+                        // Material
+                        SellDropdownField(
+                            label = stringResource(Res.string.sell_material),
+                            options = materialOptions,
+                            selected = material,
+                            onSelected = setMaterial,
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = true
+                        )
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .height(8.dp)
+                            .background(MaterialTheme.colorScheme.surface)
                     )
-                    // Sub-Category
-                    SellDropdownField(
-                        label = stringResource(Res.string.sell_sub_category),
-                        options = subCategoryOptions,
-                        selected = subCategory,
-                        onSelected = setSubCategory,
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = category.isNotBlank()
-                    )
-                    // Material
-                    SellDropdownField(
-                        label = stringResource(Res.string.sell_material),
-                        options = materialOptions,
-                        selected = material,
-                        onSelected = setMaterial,
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = true
-                    )
-                }
-                Spacer(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                )
 // Price and Stock numeric fields with inc/dec icons
-                Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(horizontal = 8.dp, vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // Price
-                    NumericInputField(
-                        label = stringResource(Res.string.sell_price),
-                        value = price,
-                        onValueChange = setPrice,
-                        onIncrement = {
-                            val current = price.toIntOrNull() ?: 0
-                            setPrice((current + 1).toString())
-                        },
-                        onDecrement = {
-                            val current = price.toIntOrNull() ?: 0
-                            if (current > 0) setPrice((current - 1).toString())
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    // Stock
-                    NumericInputField(
-                        label = stringResource(Res.string.sell_stock),
-                        value = stock,
-                        onValueChange = setStock,
-                        onIncrement = {
-                            val current = stock.toIntOrNull() ?: 0
-                            setStock((current + 1).toString())
-                        },
-                        onDecrement = {
-                            val current = stock.toIntOrNull() ?: 0
-                            if (current > 0) setStock((current - 1).toString())
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    Column(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceContainer,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        // Price
+                        NumericInputField(
+                            label = stringResource(Res.string.sell_price),
+                            value = price,
+                            onValueChange = setPrice,
+                            onIncrement = {
+                                val current = price.toIntOrNull() ?: 0
+                                setPrice((current + 1).toString())
+                            },
+                            onDecrement = {
+                                val current = price.toIntOrNull() ?: 0
+                                if (current > 0) setPrice((current - 1).toString())
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        // Stock
+                        NumericInputField(
+                            label = stringResource(Res.string.sell_stock),
+                            value = stock,
+                            onValueChange = setStock,
+                            onIncrement = {
+                                val current = stock.toIntOrNull() ?: 0
+                                setStock((current + 1).toString())
+                            },
+                            onDecrement = {
+                                val current = stock.toIntOrNull() ?: 0
+                                if (current > 0) setStock((current - 1).toString())
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
-                Spacer(
-                    modifier = Modifier
-                        .height(64.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                )
             }
         }
     }

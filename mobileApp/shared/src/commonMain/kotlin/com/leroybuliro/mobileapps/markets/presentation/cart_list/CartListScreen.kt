@@ -51,7 +51,7 @@ fun CartListScreen(
     MaterialTheme(colorScheme = if (isDarkTheme) DarkColorPalette else LightColorPalette) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = MaterialTheme.colorScheme.surface,
             floatingActionButton = {
                 ExtendedFloatingActionButton(
                     onClick = { },
@@ -61,7 +61,8 @@ fun CartListScreen(
                         .height(48.dp)
                         .background(
                             color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = RoundedCornerShape(8.dp)),
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                     text = {
                         Text(
                             text = stringResource(Res.string.cart_checkout)

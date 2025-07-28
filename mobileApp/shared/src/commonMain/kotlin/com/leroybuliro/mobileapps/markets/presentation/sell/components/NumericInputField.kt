@@ -42,9 +42,9 @@ fun NumericInputField(
             }
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-            disabledContainerColor = MaterialTheme.colorScheme.background,
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             focusedTextColor = MaterialTheme.colorScheme.primary,
             unfocusedTextColor = MaterialTheme.colorScheme.primary,
             disabledTextColor = MaterialTheme.colorScheme.inversePrimary,

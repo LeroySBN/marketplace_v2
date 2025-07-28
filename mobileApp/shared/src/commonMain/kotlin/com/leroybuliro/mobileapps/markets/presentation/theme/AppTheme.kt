@@ -8,44 +8,62 @@ import androidx.compose.ui.graphics.Color
 
 val LightColorPalette = lightColorScheme(
     primary = Color(0xFF191210),
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFF009688),
-    onPrimaryContainer = Color.White,
-//    inversePrimary = Color(0xFF8c665a),
     inversePrimary = Color(0xFF888888),
+    onPrimary = Color.White,
     secondary = Color(0xFFFF9800),
     onSecondary = Color.Black,
+    tertiary = Color.Red,
+    onTertiary = Color(0xFFB00020),
+
+    surface = Color.White,
+    onSurface = Color.White,
+    surfaceVariant = Color(0xFFF6F6F6),
+    onSurfaceVariant = Color.Black,
+
+    primaryContainer = Color(0xFF009688),
+    onPrimaryContainer = Color.White,
     secondaryContainer = Color(0xFFf1ebe9),
     onSecondaryContainer = Color(0xFF191210),
-    onTertiary = Color(0xFFB00020),
-    background = Color.White,
-    onBackground = Color.Black,
-//    surface = Color(0xFFF5F5F5),
-    surface = Color(0xFFF6F6F6),
-    onSurface = Color.Black,
-    surfaceVariant = Color(0xFFfbf9f9),
-    onSurfaceVariant = Color(0xFF8c665a),
+    tertiaryContainer = Color.White,
+    onTertiaryContainer = Color.Black,
+    surfaceContainer = Color.White,
+    surfaceContainerHigh = Color.White,
+    surfaceContainerHighest = Color.White,
+
+    background = Color(0xFFfbf9f9),
+    onBackground = Color(0xFF8c665a),
+
     error = Color(0xFFB00020),
     onError = Color.White
 )
 
 val DarkColorPalette = darkColorScheme(
     primary = Color.White,
-    onPrimary = Color.Black,
-    primaryContainer = Color(0xFF05d5c0),
-    onPrimaryContainer = Color(0xFF102321),
     inversePrimary = Color(0xFF8eccc6),
+    onPrimary = Color.Black,
     secondary = Color(0xFFFFCC80),
     onSecondary = Color.Black,
-    secondaryContainer = Color(0xFF81C784),
+    tertiary = Color.Red,
+    onTertiary = Color(0xFFB00020),
+
+    surface = Color.Black,
+    onSurface = Color(0xFF102321),
+    surfaceVariant = Color.Black,
+    onSurfaceVariant = Color.White,
+
+    primaryContainer = Color(0xFF05d5c0),
+    onPrimaryContainer = Color(0xFF102321),
+    secondaryContainer = Color(0xFF214a46),
     onSecondaryContainer = Color.White,
-    background = Color(0xFF102321),
-    onBackground = Color.White,
-//    surface = Color(0xFFDDDDDD),
-    surface = Color(0xFF102321),
-    onSurface = Color.Black,
-    surfaceVariant = Color(0xFF183532),
-    onSurfaceVariant = Color(0xFF8ECCC6),
+    tertiaryContainer = Color(0xFF0B0B0B),
+    onTertiaryContainer = Color.Black,
+    surfaceContainer = Color(0xFF0B0B0B),
+    surfaceContainerHigh = Color(0xFF050505),
+    surfaceContainerHighest = Color.Black,
+
+    background = Color(0xFF1A1A1A),
+    onBackground = Color(0xFF8ECCC6),
+
     error = Color(0xFFCF6679),
     onError = Color.White
 )
