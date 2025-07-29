@@ -21,13 +21,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -339,6 +339,11 @@ fun SellScreen(
                             modifier = Modifier.fillMaxWidth(),
                             enabled = true
                         )
+                        HorizontalDivider(
+                            Modifier.fillMaxWidth(),
+                            1.dp,
+                            MaterialTheme.colorScheme.outline
+                        )
                         // Sub-Category
                         SellDropdownField(
                             label = stringResource(Res.string.sell_sub_category),
@@ -347,6 +352,11 @@ fun SellScreen(
                             onSelected = setSubCategory,
                             modifier = Modifier.fillMaxWidth(),
                             enabled = category.isNotBlank()
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.outline
                         )
                         // Material
                         SellDropdownField(

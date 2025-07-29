@@ -15,10 +15,14 @@ val LightColorPalette = lightColorScheme(
     tertiary = Color.Red,
     onTertiary = Color(0xFFB00020),
 
-    surface = Color.White,
-    onSurface = Color.White,
+    surface = Color(0xFFF8FEFF), // Egg Shell
+    onSurface = Color(0xFF888888),
     surfaceVariant = Color(0xFFF6F6F6),
     onSurfaceVariant = Color.Black,
+
+    surfaceContainer = Color(0xFFF9FDFE), // Winter
+    surfaceContainerHigh = Color(0xFFFFFFF5), // Creamy
+    surfaceContainerHighest = Color(0xFFF8FEFF), // Egg Shell
 
     primaryContainer = Color(0xFF009688),
     onPrimaryContainer = Color.White,
@@ -26,9 +30,6 @@ val LightColorPalette = lightColorScheme(
     onSecondaryContainer = Color(0xFF191210),
     tertiaryContainer = Color.White,
     onTertiaryContainer = Color.Black,
-    surfaceContainer = Color.White,
-    surfaceContainerHigh = Color.White,
-    surfaceContainerHighest = Color.White,
 
     background = Color(0xFFfbf9f9),
     onBackground = Color(0xFF8c665a),
@@ -46,8 +47,12 @@ val DarkColorPalette = darkColorScheme(
     tertiary = Color.Red,
     onTertiary = Color(0xFFB00020),
 
+    surfaceContainer = Color(0xFF0B0B0B),
+    surfaceContainerHigh = Color(0xFF050505),
+    surfaceContainerHighest = Color.Black,
+
     surface = Color.Black,
-    onSurface = Color(0xFF102321),
+    onSurface = Color(0xFF888888),
     surfaceVariant = Color.Black,
     onSurfaceVariant = Color.White,
 
@@ -57,9 +62,6 @@ val DarkColorPalette = darkColorScheme(
     onSecondaryContainer = Color.White,
     tertiaryContainer = Color(0xFF0B0B0B),
     onTertiaryContainer = Color.Black,
-    surfaceContainer = Color(0xFF0B0B0B),
-    surfaceContainerHigh = Color(0xFF050505),
-    surfaceContainerHighest = Color.Black,
 
     background = Color(0xFF1A1A1A),
     onBackground = Color(0xFF8ECCC6),

@@ -51,7 +51,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -177,7 +176,6 @@ fun App() {
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    val backgroundColor = if (isDarkMode) Color(0xFFBBBBBB) else Color.White
     val toggleTheme = { isDarkMode = !isDarkMode }
     val toggleNavBar = { isNavBarCompact = !isNavBarCompact }
 //    val isNavBarVisible by remember {

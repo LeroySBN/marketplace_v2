@@ -1,27 +1,27 @@
 package com.leroybuliro.mobileapps.markets.presentation.settings_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ToggleOff
 import androidx.compose.material.icons.filled.ToggleOn
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults.iconButtonColors
 import androidx.compose.material3.IconButtonDefaults.iconToggleButtonColors
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,10 +35,8 @@ import markets.shared.generated.resources.app_build
 import markets.shared.generated.resources.app_creator_credits
 import markets.shared.generated.resources.app_title
 import markets.shared.generated.resources.app_version
-import markets.shared.generated.resources.close
 import markets.shared.generated.resources.navbar_compact
 import markets.shared.generated.resources.navbar_normal
-import markets.shared.generated.resources.settings
 import markets.shared.generated.resources.settings_language
 import markets.shared.generated.resources.settings_navbar
 import markets.shared.generated.resources.settings_section_apps
@@ -61,7 +59,7 @@ fun SettingsListScreen(
     onToggleNavBar: () -> Unit,
 //    onAction: (SettingsListAction) -> Unit,
 ){
-    var verticalScrollState = rememberScrollState()
+    val verticalScrollState = rememberScrollState()
 
     MaterialTheme (
         colorScheme = if (isDarkTheme) DarkColorPalette else LightColorPalette
@@ -70,275 +68,277 @@ fun SettingsListScreen(
             modifier = modifier
                 .verticalScroll(verticalScrollState)
                 .background(color = MaterialTheme.colorScheme.surface)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
+                .padding(horizontal = 0.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            Text(
+                text = stringResource(Res.string.settings_title_app),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = modifier.padding(start = 8.dp)
+            )
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    text = stringResource(Res.string.settings_title_app),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.inversePrimary
+                modifier = modifier.background(
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 )
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.onSurface,
+            ) {
+// LANGUAGE
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(0.dp),
+                    Text(
+                        text = stringResource(Res.string.settings_language),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconButton(
+                        onClick = { onToggleTheme },
+                        colors = iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        )
                     ) {
-
-                        // LANGUAGE
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_language),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = stringResource(Res.string.settings_language),
+                        )
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+// DARK MODE
+                Row(
+                    modifier = modifier
+                        .clickable { onToggleTheme() }
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_theme),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconButton(
+                        onClick = { onToggleTheme() },
+                        colors = iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor =
+                                if (isDarkTheme) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.inversePrimary,
+                        )
+                    ) {
+                        Icon(
+                            imageVector = if (isDarkTheme) Icons.Filled.ToggleOn
+                            else Icons.Filled.ToggleOff,
+                            contentDescription = if (isDarkTheme) stringResource(
+                                Res.string.theme_off
                             )
-                            IconToggleButton(
-                                checked = isDarkTheme,
-                                onCheckedChange = { onToggleTheme },
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ChevronRight,
-                                    contentDescription = stringResource(Res.string.settings_language),
-                                )
-                            }
-                        }
-
-                        // DARK MODE
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_theme),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
+                            else stringResource(Res.string.theme_on),
+                        )
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+// NAVBAR
+                Row(
+                    modifier = modifier
+                        .clickable { onToggleNavBar() }
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_navbar),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconButton(
+                        onClick = { onToggleNavBar() },
+                        colors = iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor =
+                                if (isNavBarCompact) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.inversePrimary,
+                        )
+                    ) {
+                        Icon(
+                            imageVector = if (isNavBarCompact) Icons.Filled.ToggleOn
+                            else Icons.Filled.ToggleOff,
+                            contentDescription = if (isNavBarCompact) stringResource(
+                                Res.string.navbar_normal
                             )
-                            IconToggleButton(
-                                checked = isDarkTheme,
-                                onCheckedChange = { onToggleTheme() },
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = if (isDarkTheme) Icons.Filled.ToggleOn
-                                    else Icons.Filled.ToggleOff,
-                                    contentDescription = if (isDarkTheme) stringResource(
-                                        Res.string.theme_off
-                                    )
-                                    else stringResource(Res.string.theme_on),
-                                )
-                            }
-                        }
-
-                        // NAVBAR
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_navbar),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            IconToggleButton(
-                                checked = isNavBarCompact,
-                                onCheckedChange = { onToggleNavBar() },
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = if (isNavBarCompact) Icons.Filled.ToggleOn
-                                    else Icons.Filled.ToggleOff,
-                                    contentDescription = if (isNavBarCompact) stringResource(
-                                        Res.string.navbar_normal
-                                    )
-                                    else stringResource(Res.string.navbar_compact),
-                                )
-                            }
-                        }
+                            else stringResource(Res.string.navbar_compact),
+                        )
                     }
                 }
             }
+            Text(
+                text = stringResource(Res.string.settings_title_general),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = modifier.padding(start = 8.dp)
+            )
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text(
-                    text = stringResource(Res.string.settings_title_general),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.inversePrimary
+                modifier = modifier.background(
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 )
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.onSurface
+            ) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(0.dp),
+                    Text(
+                        text = stringResource(Res.string.settings_section_website),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconToggleButton(
+                        checked = isDarkTheme,
+                        onCheckedChange = {},
+                        colors = iconToggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            checkedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            checkedContentColor = MaterialTheme.colorScheme.primary,
+                        )
                     ) {
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_section_website),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            IconToggleButton(
-                                checked = isDarkTheme,
-                                onCheckedChange = {},
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ChevronRight,
-                                    contentDescription = stringResource(Res.string.settings_section_website),
-                                )
-                            }
-                        }
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_section_rating),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            IconToggleButton(
-                                checked = isDarkTheme,
-                                onCheckedChange = {},
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ChevronRight,
-                                    contentDescription = stringResource(Res.string.settings_section_rating),
-                                )
-                            }
-                        }
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_section_apps),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            IconToggleButton(
-                                checked = isDarkTheme,
-                                onCheckedChange = {},
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ChevronRight,
-                                    contentDescription = stringResource(Res.string.settings_section_apps),
-                                )
-                            }
-                        }
-                        Row(
-                            modifier = modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_section_feedback),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            IconToggleButton(
-                                checked = isDarkTheme,
-                                onCheckedChange = {},
-                                colors = iconToggleButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.onSurface,
-                                    contentColor = MaterialTheme.colorScheme.primary,
-                                    checkedContainerColor = MaterialTheme.colorScheme.onSurface,
-                                    checkedContentColor = MaterialTheme.colorScheme.primary,
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.ChevronRight,
-                                    contentDescription = stringResource(Res.string.settings_section_feedback),
-                                )
-                            }
-                        }
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = stringResource(Res.string.settings_section_website),
+                        )
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_section_rating),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconToggleButton(
+                        checked = isDarkTheme,
+                        onCheckedChange = {},
+                        colors = iconToggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            checkedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            checkedContentColor = MaterialTheme.colorScheme.primary,
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = stringResource(Res.string.settings_section_rating),
+                        )
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_section_apps),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconToggleButton(
+                        checked = isDarkTheme,
+                        onCheckedChange = {},
+                        colors = iconToggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            checkedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            checkedContentColor = MaterialTheme.colorScheme.primary,
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = stringResource(Res.string.settings_section_apps),
+                        )
+                    }
+                }
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp,
+                    color = MaterialTheme.colorScheme.outline
+                )
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(Res.string.settings_section_feedback),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = modifier.padding(start = 16.dp)
+                    )
+                    IconToggleButton(
+                        checked = isDarkTheme,
+                        onCheckedChange = {},
+                        colors = iconToggleButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            contentColor = MaterialTheme.colorScheme.primary,
+                            checkedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            checkedContentColor = MaterialTheme.colorScheme.primary,
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.ChevronRight,
+                            contentDescription = stringResource(Res.string.settings_section_feedback),
+                        )
                     }
                 }
             }
-            Column(
-                verticalArrangement = Arrangement.spacedBy(0.dp),
-            ) {
-                Text(
-                    text = stringResource(Res.string.app_title) + " " +
-                            stringResource(Res.string.app_version) + " (" +
-                            stringResource(Res.string.app_build) + ")",
-                    modifier = modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = stringResource(Res.string.app_creator_credits),
-                    modifier = modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
+            Spacer(
+                modifier = modifier.height(32.dp)
+            )
+// Credits
+            Text(
+                text = stringResource(Res.string.app_title) + " " +
+                        stringResource(Res.string.app_version) + " (" +
+                        stringResource(Res.string.app_build) + ")",
+                modifier = modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = stringResource(Res.string.app_creator_credits),
+                modifier = modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
